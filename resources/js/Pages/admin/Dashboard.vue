@@ -81,7 +81,7 @@ export default {
   layout: DashboardLayout,
   methods: {},
   created() {
-    this.$store.dispatch("fetchAdmin");
+    this.$store.dispatch("assignTitle", "Dashboard");
   },
 };
 </script>

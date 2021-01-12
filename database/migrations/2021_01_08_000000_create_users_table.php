@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
         });
     }
 

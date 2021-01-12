@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Batch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class BatchController extends Controller
 {
@@ -14,7 +16,11 @@ class BatchController extends Controller
      */
     public function index()
     {
-        //
+        $batches = Batch::withCount('users')->get();
+
+        return Inertia::render('admin/batches/Index', [
+            'batches' => $batches
+        ]);
     }
 
     /**
@@ -35,7 +41,14 @@ class BatchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'start' => 'required',
+            'end' => 'required'
+        ]);
+
+        Batch::create($request->all());
+        return Redirect::back();
     }
 
     /**
@@ -69,7 +82,14 @@ class BatchController extends Controller
      */
     public function update(Request $request, Batch $batch)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'start' => 'required',
+            'end' => 'required'
+        ]);
+
+        $batch->update($request->only('name', 'start', 'end'));
+        return Redirect::back();
     }
 
     /**
@@ -80,6 +100,7 @@ class BatchController extends Controller
      */
     public function destroy(Batch $batch)
     {
-        //
+        $batch->delete();
+        return Redirect::back();
     }
 }

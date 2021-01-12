@@ -10,12 +10,11 @@
 
 <script>
 import Layout from "../../layout/DashboardLayout";
-import { mapGetters } from "vuex";
 
 export default {
   layout: Layout,
-  computed: {
-    ...mapGetters(["admin"]),
+  created() {
+    this.$store.dispatch("assignTitle", "Profile");
   },
 };
 </script>

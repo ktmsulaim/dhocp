@@ -36,7 +36,7 @@
         cx="50"
         cy="50"
         fill="none"
-        stroke="#ffffff"
+        :stroke="loaderColor"
         stroke-width="7"
         r="35"
         stroke-dasharray="164.93361431346415 56.97787143782138"
@@ -117,6 +117,11 @@ export default {
       type: Boolean,
       default: false,
       description: "Add a circle to button",
+    },
+    loaderColor: {
+      type: String,
+      default: "#ffffff",
+      description: "Define circle color",
     },
   },
   computed: {

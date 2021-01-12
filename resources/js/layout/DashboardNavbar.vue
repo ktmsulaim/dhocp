@@ -1,5 +1,6 @@
 <template>
   <base-nav
+    :label="pageTitle"
     class="navbar-top navbar-dark"
     id="navbar-main"
     :show-toggle-button="false"
@@ -45,6 +46,7 @@
               href="/admin/logout"
               method="post"
               class="dropdown-item"
+              as="button"
             >
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
@@ -78,8 +80,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["admin"]),
+    ...mapGetters(["admin", "pageTitle"]),
   },
-  created() {},
 };
 </script>

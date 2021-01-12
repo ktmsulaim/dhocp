@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAppController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BatchController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,6 +28,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [AdminAppController::class, 'index'])->name('admin.index');
         Route::get('/profile', [AdminAppController::class, 'profile'])->name('admin.profile');
 
+        Route::resource('batches', BatchController::class, ['except' => ['destroy']]);
+        Route::post('/batches/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

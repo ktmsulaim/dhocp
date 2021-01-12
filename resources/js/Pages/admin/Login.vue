@@ -92,6 +92,10 @@ export default {
       this.form.post("/admin/login");
     },
   },
+
+  created() {
+    this.$store.dispatch("assignTitle", "Login");
+  },
 };
 </script>
 
