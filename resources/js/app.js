@@ -7,10 +7,16 @@ import ArgonDashboard from './plugins/argon-dashboard'
 import { InertiaProgress } from '@inertiajs/progress'
 import Vue from 'vue'
 import store from './store'
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+
 
 Vue.use(plugin)
 Vue.use(ArgonDashboard)
 InertiaProgress.init()
+Vue.use(flatPickr);
+
+Vue.prototype.$route = route
 
 const el = document.getElementById('app')
 

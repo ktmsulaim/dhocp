@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,6 +31,14 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('batches', BatchController::class, ['except' => ['destroy']]);
         Route::post('/batches/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
+
+        Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+        Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+        Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
+        Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
+        Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.update');
+        Route::post('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

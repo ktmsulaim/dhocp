@@ -17,6 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'batch_id',
         'name',
         'enroll_no',
         'dob_password',
@@ -37,6 +38,11 @@ class User extends Authenticatable
     public function getAuthPassword()
     {
         return $this->dob_password;
+    }
+
+    public function setDobPasswordAttribute($value)
+    {
+        $this->attributes['dob_password'] = bcrypt($value);
     }
 
     public function batch()
