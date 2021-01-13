@@ -41,7 +41,9 @@
                       <div class="container">
                         <div class="row">
                           <div class="col">
-                            <p><b>0</b> Items</p>
+                            <p>
+                              <b>{{ mod.items_count }}</b> Items
+                            </p>
                             <div class="text-center">
                               <base-button
                                 size="sm"

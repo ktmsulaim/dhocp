@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,12 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('modules', ModuleController::class, ['except' => ['destroy']]);
         Route::post('/modules/{module}', [ModuleController::class, 'destroy'])->name('modules.destroy');
+
+        Route::get('/module/{module}/items/create', [ItemController::class, 'create'])->name('items.create');
+        Route::post('/items/store', [ItemController::class, 'store'])->name('items.store');
+        Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
+        Route::patch('/item/{item}', [ItemController::class, 'update'])->name('items.update');
+        Route::post('/item/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

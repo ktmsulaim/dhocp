@@ -16,10 +16,10 @@ class ModuleController extends Controller
      */
     public function index()
     {
-        $modules = Module::all();
+        $modules = Module::withCount('items')->get();
 
         return Inertia::render('admin/modules/Index', [
-            'modules' => $modules
+            'modules' => $modules,
         ]);
     }
 
@@ -61,7 +61,7 @@ class ModuleController extends Controller
     {
         return Inertia::render('admin/modules/Show', [
             'module' => $module,
-            'items' => null,
+            'items' => $module->items,
         ]);
     }
 

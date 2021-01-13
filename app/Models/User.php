@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Batch::class);
     }
+
+    public function items()
+    {
+        return $this->belongsToMany(ItemUser::class);
+    }
 }
