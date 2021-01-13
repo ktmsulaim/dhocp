@@ -2,15 +2,15 @@
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
     <side-bar
       :background-color="sidebarBackground"
-      short-title="Argon"
-      title="Argon"
+      short-title="DHOCP"
+      title="DHOCP"
     >
       <template slot="links">
         <sidebar-item
           :link="{
             name: 'Dashboard',
             icon: 'ni ni-tv-2 text-primary',
-            path: '/admin/',
+            path: '/admin',
           }"
         />
 

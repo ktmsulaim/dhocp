@@ -1,8 +1,4 @@
 <template>
-  <!-- <h1>Hello, {{ user.name }}</h1>
-    <inertia-link as="button" href="/admin/logout" method="post"
-      >Logout</inertia-link
-    > -->
   <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
     <!-- Card stats -->
     <div class="row">
@@ -81,6 +77,11 @@ export default {
   layout: DashboardLayout,
   methods: {},
   created() {
+    if (this.user && !localStorage.getItem("token")) {
+      localStorage.setItem("token", this.user.api_token);
+      this.$store.dispatch("fetchAdmin");
+    }
+
     this.$store.dispatch("assignTitle", "Dashboard");
   },
 };

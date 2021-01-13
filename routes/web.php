@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.update');
         Route::post('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+
+        Route::resource('modules', ModuleController::class, ['except' => ['destroy']]);
+        Route::post('/modules/{module}', [ModuleController::class, 'destroy'])->name('modules.destroy');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
