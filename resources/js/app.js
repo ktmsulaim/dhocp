@@ -10,6 +10,9 @@ import store from './store'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
+import VueFileAgent from 'vue-file-agent';
+import VueFileAgentStyles from 'vue-file-agent/dist/vue-file-agent.css';
+
 
 
 Vue.use(plugin)
@@ -18,6 +21,7 @@ InertiaProgress.init()
 Vue.use(flatPickr);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(VueFileAgent);
 
 Vue.prototype.$route = route
 

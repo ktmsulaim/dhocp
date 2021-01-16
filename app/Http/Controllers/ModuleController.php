@@ -43,7 +43,9 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required',
-            'status' => 'required|integer'
+            'status' => 'required|integer',
+            'repeatable' => 'required|integer',
+            'office_use' => 'required|integer',
         ]);
 
         Module::create($request->all());
@@ -88,7 +90,9 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required',
-            'status' => 'required|integer'
+            'status' => 'required|integer',
+            'repeatable' => 'required|integer',
+            'office_use' => 'required|integer',
         ]);
 
         $module->update($request->all());

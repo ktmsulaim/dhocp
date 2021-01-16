@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,16 @@ class Item extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Order by order ASC
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('order', 'asc');
+        });
+    }
 
     public function setAddiotionalAttribute($value)
     {
@@ -25,6 +36,6 @@ class Item extends Model
 
     public function users()
     {
-        return $this->belongsToMany(ItemUser::class);
+        return $this->belongsToMany(ItemUser::class, 'item_users');
     }
 }

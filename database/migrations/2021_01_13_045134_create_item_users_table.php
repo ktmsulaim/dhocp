@@ -13,15 +13,19 @@ class CreateItemUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_users', function (Blueprint $table) {
+        Schema::create('item_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id')->index();
+            $table->unsignedBigInteger('item_group_id')->index()->nullable();
             $table->unsignedBigInteger('user_id')->index();
             $table->text('value')->nullable();
+            $table->text('value_info')->nullable();
             $table->integer('is_valid')->default(1); // [0 => Not valid, 1 => Pending, 2 => Valid]
             $table->text('valid_message')->nullable();
+            $table->timestamp('admin_updated')->nullable();
             $table->timestamps();
 
+            $table->foreign('item_group_id')->references('id')->on('item_groups')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('api_token');
             $table->unsignedBigInteger('batch_id');
             $table->string('name');
             $table->string('enroll_no')->unique();

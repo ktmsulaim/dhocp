@@ -126,15 +126,6 @@
                     </p>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-g">
-                    <label class="form-control-label">Readonly</label>
-                    <select v-model="form.readonly" class="form-control">
-                      <option value="0">Not readonly</option>
-                      <option value="1">Readonly (Office use)</option>
-                    </select>
-                  </div>
-                </div>
               </div>
             </div>
             <additional-value :type="form.type"></additional-value>
@@ -192,7 +183,6 @@ export default {
         additional: {},
         size: null,
         order: null,
-        readonly: 0,
       }),
     };
   },

@@ -37,7 +37,7 @@
               <base-input
                 class="input-group-alternative"
                 placeholder="DOB"
-                type="text"
+                type="password"
                 addon-left-icon="ni ni-lock-circle-open"
                 v-model="form.dob"
               >

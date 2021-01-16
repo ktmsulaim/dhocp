@@ -4,10 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ItemUser extends Model
+class ItemUser extends Pivot
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $table = 'item_user';
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

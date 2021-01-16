@@ -17,6 +17,8 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
+            $table->tinyInteger('repeatable')->default(0);
+            $table->tinyInteger('office_use')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

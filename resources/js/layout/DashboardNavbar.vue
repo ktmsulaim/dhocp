@@ -66,6 +66,7 @@ export default {
       activeNotifications: false,
       showMenu: false,
       searchQuery: "",
+      admin: null,
     };
   },
   methods: {
@@ -80,7 +81,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["admin", "pageTitle"]),
+    ...mapGetters(["pageTitle"]),
+  },
+  created() {
+    this.admin = this.$page.props.admin;
   },
 };
 </script>

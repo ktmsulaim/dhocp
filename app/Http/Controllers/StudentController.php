@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
+
 use Inertia\Inertia;
 
 class StudentController extends Controller
@@ -68,7 +70,10 @@ class StudentController extends Controller
             'active' => 'required'
         ]);
 
-        User::create(array_merge($request->all(), ['dob' => $request->dob_password]));
+        User::create(array_merge(
+            $request->all(),
+            ['dob' => $request->dob_password, 'api_token' => Str::random(32)]
+        ));
 
         return Redirect::back();
     }

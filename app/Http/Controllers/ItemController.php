@@ -52,7 +52,6 @@ class ItemController extends Controller
             'additional' => 'required_if:type,==,dropdown',
             'size' => '',
             'order' => '',
-            'readonly' => 'required|integer'
         ]);
 
         $item = new Item();
@@ -66,7 +65,6 @@ class ItemController extends Controller
         $item->additional = json_encode($request->additional, JSON_FORCE_OBJECT);
         $item->size = $request->size;
         $item->order = $request->order;
-        $item->readonly = $request->readonly;
         $item->save();
 
         return Redirect::route('modules.show', $request->module_id);
@@ -117,7 +115,6 @@ class ItemController extends Controller
             'additional' => 'required_if:type,==,dropdown',
             'size' => '',
             'order' => '',
-            'readonly' => 'required|integer'
         ]);
 
 
@@ -135,7 +132,6 @@ class ItemController extends Controller
         $item->placeholder = $request->placeholder;
         $item->size = $request->size;
         $item->order = $request->order;
-        $item->readonly = $request->readonly;
         $item->save();
 
         return Redirect::route('modules.show', $item->module_id);

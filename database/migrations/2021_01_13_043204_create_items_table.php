@@ -25,7 +25,6 @@ class CreateItemsTable extends Migration
             $table->json('additional')->nullable();
             $table->string('size')->nullable(); // [1 => Full, 2 => Half, 3 => One third, 4 => Quarter]
             $table->integer('order')->nullable();
-            $table->integer('readonly')->default(0); // [0 => Not readonly, 1 => Readonly (office use)]
             $table->timestamps();
 
             $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');

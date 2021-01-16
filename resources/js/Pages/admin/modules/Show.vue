@@ -44,7 +44,7 @@
                     <div
                       v-for="(item, i) in items"
                       :key="i"
-                      class="col col-md-6"
+                      class="col col-md-6 my-3"
                     >
                       <div class="card">
                         <div class="card-header">

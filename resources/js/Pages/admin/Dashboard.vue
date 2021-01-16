@@ -77,11 +77,6 @@ export default {
   layout: DashboardLayout,
   methods: {},
   created() {
-    if (this.user && !localStorage.getItem("token")) {
-      localStorage.setItem("token", this.user.api_token);
-      this.$store.dispatch("fetchAdmin");
-    }
-
     this.$store.dispatch("assignTitle", "Dashboard");
   },
 };

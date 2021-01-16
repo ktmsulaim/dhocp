@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Batch;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UserTableSeeder extends Seeder
 {
@@ -22,10 +23,11 @@ class UserTableSeeder extends Seeder
         ]);
 
         $batch->users()->create([
+            'api_token' => Str::random(32),
             'name' => 'ktmsulaim',
             'enroll_no' => '14042',
             'dob' => '13031997',
-            'dob_password' => bcrypt('13031997'),
+            'dob_password' => '13031997',
         ]);
     }
 }

@@ -41,9 +41,25 @@
                       <div class="container">
                         <div class="row">
                           <div class="col">
-                            <p>
+                            <p class="m-0">
                               <b>{{ mod.items_count }}</b> Items
                             </p>
+                            <div class="mb-3">
+                              <badge
+                                :type="mod.status == 1 ? 'success' : 'danger'"
+                                >{{
+                                  mod.status == 1 ? "Enabled" : "Disabled"
+                                }}</badge
+                              >
+                              <badge v-if="mod.repeatable == 1" :type="'info'"
+                                >Repeatable</badge
+                              >
+                              <badge
+                                v-if="mod.office_use == 1"
+                                :type="'warning'"
+                                >Office use</badge
+                              >
+                            </div>
                             <div class="text-center">
                               <base-button
                                 size="sm"
@@ -122,6 +138,43 @@
                             <small>{{ form.errors.description }}</small>
                           </p>
                         </base-input>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <base-input alternative>
+                            <select
+                              class="form-control form-control-alternative"
+                              v-model="form.repeatable"
+                            >
+                              <option value="1">Repeatable</option>
+                              <option value="0">Not repeatable</option>
+                            </select>
+                            <p
+                              class="text-danger"
+                              v-if="form.errors.repeatable"
+                            >
+                              <small>{{ form.errors.repeatable }}</small>
+                            </p>
+                          </base-input>
+                        </div>
+                        <div class="col-md-6">
+                          <base-input alternative>
+                            <select
+                              class="form-control form-control-alternative"
+                              v-model="form.office_use"
+                            >
+                              <option value="1">Office use</option>
+                              <option value="0">Not office use</option>
+                            </select>
+                            <p
+                              class="text-danger"
+                              v-if="form.errors.office_use"
+                            >
+                              <small>{{ form.errors.office_use }}</small>
+                            </p>
+                          </base-input>
+                        </div>
                       </div>
 
                       <div>
@@ -210,9 +263,11 @@
 </template>
 
 <script>
+import Badge from "../../../components/Badge.vue";
 import DashboardLayout from "../../../layout/DashboardLayout";
 
 export default {
+  components: { Badge },
   props: ["modules"],
   layout: DashboardLayout,
   data() {
@@ -224,6 +279,8 @@ export default {
       form: this.$inertia.form({
         name: null,
         description: null,
+        repeatable: 0,
+        office_use: 0,
         status: 1,
       }),
       notification: {
@@ -268,6 +325,8 @@ export default {
         this.form.name = modul.name;
         this.form.description = modul.description;
         this.form.status = modul.status;
+        this.form.repeatable = modul.repeatable;
+        this.form.office_use = modul.office_use;
       }
     },
     isValid(key) {

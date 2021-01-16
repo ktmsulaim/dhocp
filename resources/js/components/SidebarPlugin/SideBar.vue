@@ -8,7 +8,7 @@
       <navbar-toggle-button @click.native="showSidebar">
         <span class="navbar-toggler-icon"></span>
       </navbar-toggle-button>
-      <inertia-link class="navbar-brand" href="/admin/">
+      <inertia-link class="navbar-brand" :href="urls.main">
         <img :src="logo" class="navbar-brand-img" alt="..." />
       </inertia-link>
 
@@ -26,13 +26,13 @@
             <div class="dropdown-header noti-title">
               <h6 class="text-overflow m-0">Welcome!</h6>
             </div>
-            <inertia-link href="/admin/profile" class="dropdown-item">
+            <inertia-link :href="urls.profile" class="dropdown-item">
               <i class="ni ni-single-02"></i>
               <span>My profile</span>
             </inertia-link>
             <div class="dropdown-divider"></div>
             <inertia-link
-              href="/admin/logout"
+              :href="urls.logout"
               method="post"
               class="dropdown-item"
               as="button"
@@ -90,6 +90,10 @@ export default {
       default: true,
       description:
         "Whether sidebar should autoclose on mobile when clicking an item",
+    },
+    urls: {
+      type: Object,
+      description: "Set links of Main page, profile and logout pages.",
     },
   },
   provide() {

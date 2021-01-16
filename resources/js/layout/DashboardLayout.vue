@@ -4,6 +4,11 @@
       :background-color="sidebarBackground"
       short-title="DHOCP"
       title="DHOCP"
+      :urls="{
+        main: '/admin',
+        profile: '/admin/profile',
+        logout: '/admin/logout',
+      }"
     >
       <template slot="links">
         <sidebar-item
@@ -54,16 +59,12 @@
 import DashboardNavbar from "./DashboardNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import { FadeTransition } from "vue2-transitions";
-import { mapGetters } from "vuex";
 
 export default {
   components: {
     DashboardNavbar,
     ContentFooter,
     FadeTransition,
-  },
-  computed: {
-    ...mapGetters(["admin"]),
   },
   data() {
     return {
@@ -77,11 +78,7 @@ export default {
       }
     },
   },
-  created() {
-    if (!this.admin) {
-      this.$store.dispatch("fetchAdmin");
-    }
-  },
+  created() {},
 };
 </script>
 <style lang="scss">
