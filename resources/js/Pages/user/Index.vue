@@ -32,18 +32,18 @@
                         </p>
                         <p class="small">
                           <b>Pending: </b>
-                          <span class="count">{{ mod.total_items }}</span>
+                          <span class="count">{{ mod.total_pending }}</span>
                         </p>
                         <p class="small">
                           <b>Valid: </b>
                           <span class="count text-success">{{
-                            mod.total_items
+                            mod.total_valid
                           }}</span>
                         </p>
                         <p class="small">
                           <b>Invalid: </b>
                           <span class="count text-danger">{{
-                            mod.total_items
+                            mod.total_invalid
                           }}</span>
                         </p>
                       </div>

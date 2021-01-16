@@ -24,7 +24,7 @@
                     @click="backToStudents"
                     type="primary"
                     icon="ni ni-bold-left"
-                    >Back to Students</base-button
+                    >Back</base-button
                   >
                 </div>
               </div>
@@ -180,7 +180,9 @@ export default {
   computed: {},
   methods: {
     backToStudents() {
-      this.$inertia.get(this.$route("students.index"));
+      this.$inertia.get(
+        this.$route("students.show", { id: this.student.data.id })
+      );
     },
     submit() {
       this.form.patch(

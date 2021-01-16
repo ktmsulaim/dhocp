@@ -67,16 +67,35 @@
           </div>
         </div>
       </div>
+      <div class="row" v-if="modules && modules.length > 0">
+        <div class="col">
+          <div
+            v-for="module in modules"
+            :key="module.id"
+            class="card shadow my-3"
+          >
+            <div class="card-header">
+              <h4>{{ module.name }}</h4>
+            </div>
+            <div class="card-body">
+              <module :module="module" :studentId="student.data.id" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import DashboardLayout from "../../../layout/DashboardLayout";
-
+import Module from "../../../components/Module";
 export default {
-  props: ["student"],
+  props: ["student", "modules"],
   layout: DashboardLayout,
+  components: {
+    Module,
+  },
   methods: {
     backToStudents() {
       this.$inertia.get(this.$route("students.index"));

@@ -27,23 +27,48 @@
             </div>
             <div class="card-body">
               <div>
-                <div class="row" v-if="itemUsers && itemUsers.length > 0">
+                <div v-if="module.repeatable == 1">
                   <div
-                    v-for="item in itemUsers"
-                    :key="item.id"
-                    :class="getInputSize(item)"
+                    class="row"
+                    v-if="module.items && module.items.length > 0"
                   >
-                    <single-item
-                      :item="item"
-                      :oldValue="getItemValue(item)"
-                    ></single-item>
+                    <div
+                      v-for="item in module.items"
+                      :key="item.id"
+                      :class="getInputSize(item)"
+                    >
+                      <single-item
+                        :item="item"
+                        :oldValue="getItemValue(item)"
+                      ></single-item>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p>No data!</p>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="row" v-if="itemUsers && itemUsers.length > 0">
+                    <div
+                      v-for="item in itemUsers"
+                      :key="item.id"
+                      :class="getInputSize(item)"
+                    >
+                      <single-item
+                        :item="item"
+                        :oldValue="getItemValue(item)"
+                      ></single-item>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p>No data!</p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer">
               <base-button
-                :disabled="isFormDataEmpty"
+                :disabled="!itemValues || !form.data"
                 @click="submit"
                 type="primary"
                 >Submit</base-button
@@ -143,9 +168,6 @@ export default {
       } else {
         return null;
       }
-    },
-    isFormDataEmpty() {
-      return _.isEmpty(this.form.data);
     },
   },
   methods: {

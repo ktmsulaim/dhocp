@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\User as ResourcesUser;
 use App\Models\Batch;
+use App\Models\Item;
+use App\Models\ItemGroup;
+use App\Models\Module;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -87,9 +90,11 @@ class StudentController extends Controller
     public function show($id)
     {
         $student = User::findOrFail($id);
+        $modules = Module::active()->get();
 
         return Inertia::render('admin/students/Show', [
             'student' => new ResourcesUser($student),
+            'modules' => $modules,
         ]);
     }
 
@@ -151,5 +156,23 @@ class StudentController extends Controller
         }
 
         return Redirect::back();
+    }
+
+
+    public function getModuleItems($student_id, $module_id)
+    {
+        $module = Module::findOrFail($module_id);
+        $user = User::findOrFail($student_id);
+
+        if ($module->isRepeatable()) {
+            $items = [
+                'items' => $module->items,
+                'itemGroups' => ItemGroup::where(['module_id' => $module_id, 'user_id' => $user->id])->with('itemUsers')->get(),
+            ];
+        } else {
+            $items = $user->getItemsByModule($module_id);
+        }
+
+        return $items;
     }
 }

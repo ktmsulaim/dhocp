@@ -101,6 +101,9 @@ class UserModuleController extends Controller
                 $module = $item->module;
                 $itemGroup = null;
 
+                // if item type is file return back()
+                if ($item->type == 'file') Redirect::back();
+
 
                 if ($module->repeatable == 1 && !$request->has('item_group_id')) Redirect::back();
 

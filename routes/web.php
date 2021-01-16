@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('batches', BatchController::class, ['except' => ['destroy']]);
         Route::post('/batches/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
 
+
         Route::get('/students', [StudentController::class, 'index'])->name('students.index');
         Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
@@ -51,6 +52,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.update');
         Route::post('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+
+        Route::get('/students/{id}/module/{module}', [StudentController::class, 'getModuleItems'])->name('admin.students.items');
+        Route::post('/items/{id}/updateStatus', [ModuleController::class, 'updateStatus'])->name('students.items.udpateStatus');
+        Route::post('/items/{id}/updateInvalidMessage', [ModuleController::class, 'updateInvalidMessage'])->name('students.items.udpateInvalidMessage');
+        Route::post('/itemGroups/{id}/updateStatus', [ModuleController::class, 'updateItemGroupStatus'])->name('students.itemGroups.udpateStatus');
+        Route::post('/itemGroups/{id}/updateInvalidMessage', [ModuleController::class, 'updateIGInvalidMessage'])->name('students.itemGroups.udpateInvalidMessage');
 
         Route::resource('modules', ModuleController::class, ['except' => ['destroy']]);
         Route::post('/modules/{module}', [ModuleController::class, 'destroy'])->name('modules.destroy');

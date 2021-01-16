@@ -43,6 +43,7 @@
                             >
                               {{ item.label }}
                             </th>
+                            <th>Status</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -61,6 +62,13 @@
                                   ? getItemUser(item2, ig).value
                                   : ""
                               }}
+                            </td>
+                            <td>
+                              <item-status
+                                role="user"
+                                type="itemGroup"
+                                :item="ig"
+                              ></item-status>
                             </td>
                             <td width="80">
                               <base-dropdown class="dropdown" position="right">
@@ -81,7 +89,6 @@
                                     class="dropdown-item"
                                     >Edit</span
                                   >
-                                  <span class="dropdown-item">Delete</span>
                                 </template>
                               </base-dropdown>
                             </td>
@@ -112,20 +119,30 @@
                       <p class="form-control-label">
                         <b>{{ item.label }}</b>
                       </p>
-                      <p>
+                      <div class="my-2">
                         <div v-if="item.pivot.value">
                           <span v-if="item.type == 'dropdown'">
                             {{ getOptionName(item.pivot.value, item) }}
                           </span>
                           <span v-else-if="item.type == 'checkbox'">
-                            {{ item.pivot.value == 1 ? 'Yes' : 'No' }}
+                            {{ item.pivot.value == 1 ? "Yes" : "No" }}
                           </span>
                           <div v-else-if="item.type == 'file'">
                             <div v-if="isImage(item.pivot.value_info)">
-                              <img width="150" :src="item.pivot.value" alt="">
+                              <img width="150" :src="item.pivot.value" alt="" />
+                              <div class="d-flex align-items-center mt-3">
+                                <span class="mx-3">Download</span>
+                                <file-viewer type="image" :item="item" />
+                              </div>
                             </div>
                             <div v-else>
-                              Non image file uploaded!
+                              <div class="my-2">
+                                <img width="150" src="/img/file.png" alt="" />
+                              </div>
+                              <div class="d-flex align-items-center">
+                                <span class="mx-3">Download</span>
+                                <file-viewer type="doc" :item="item" />
+                              </div>
                             </div>
                           </div>
                           <span v-else>
@@ -133,9 +150,9 @@
                           </span>
                         </div>
                         <span v-else class="text-danger">No data</span>
-                      </p>
-                      <div class="mt-2">
-                        <item-status :item="item"></item-status>
+                      </div>
+                      <div v-if="item.pivot.value" class="mt-2">
+                        <item-status role="user" :item="item"></item-status>
                       </div>
                     </div>
                   </div>
@@ -156,6 +173,7 @@
 import DashboardLayout from "../../../layout/users/DashboardLayout";
 import SingleItem from "../../../components/SingleItem";
 import ItemStatus from "../../../components/ItemStatus";
+import FileViewer from "../../../components/FileViewer";
 
 export default {
   layout: DashboardLayout,
@@ -163,6 +181,7 @@ export default {
   components: {
     SingleItem,
     ItemStatus,
+    FileViewer,
   },
   data() {
     return {

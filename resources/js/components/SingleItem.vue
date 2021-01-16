@@ -138,7 +138,7 @@ export default {
     options() {
       const additional = JSON.parse(this.item.additional);
 
-      if (this.item.type == "dropdown" && additional) {
+      if (additional) {
         const obj = Object.values(additional);
         return obj;
       } else {
