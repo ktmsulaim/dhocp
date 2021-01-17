@@ -148,4 +148,18 @@ class ItemController extends Controller
         $item->delete();
         return Redirect::back();
     }
+
+    public function updateOrder(Request $request)
+    {
+        $items = $request->items;
+
+        // dd($items);
+        if ($items && count($items) > 0) {
+            foreach ($items as $key => $item) {
+                $itemObj = Item::findOrFail($item['id']);
+                $itemObj->order = $item['order'];
+                $itemObj->save();
+            }
+        }
+    }
 }

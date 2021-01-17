@@ -40,43 +40,58 @@
             <div class="container my-3">
               <div class="row">
                 <div class="col" v-if="items && items.length > 0">
-                  <div class="row">
-                    <div
-                      v-for="(item, i) in items"
-                      :key="i"
-                      class="col col-md-6 my-3"
+                  <div>
+                    <draggable
+                      class="row"
+                      :list="newItems"
+                      group="Items"
+                      handle=".card"
+                      dataIdAttr="data-id"
+                      :move="updateOrder"
+                      @change="saveOrder"
+                      @start="drag = true"
+                      @end="drag = false"
                     >
-                      <div class="card">
-                        <div class="card-header">
-                          <h4>{{ item.label }}</h4>
-                        </div>
-                        <div class="card-body">
-                          <p class="small text-muted">{{ item.description }}</p>
-                          <div class="status">
-                            <badge type="info">{{
-                              item.type.toUpperCase()
-                            }}</badge>
-                            <badge type="primary">{{
-                              item.required ? "Required" : "Not required"
-                            }}</badge>
+                      <div
+                        v-for="item in newItems"
+                        :key="item.id"
+                        :data-id="item.id"
+                        class="col col-md-6 my-3"
+                      >
+                        <div class="card">
+                          <div class="card-header">
+                            <h4>{{ item.label }}</h4>
+                          </div>
+                          <div class="card-body">
+                            <p class="small text-muted">
+                              {{ item.description }}
+                            </p>
+                            <div class="status">
+                              <badge type="info">{{
+                                item.type.toUpperCase()
+                              }}</badge>
+                              <badge type="primary">{{
+                                item.required ? "Required" : "Not required"
+                              }}</badge>
+                            </div>
+                          </div>
+                          <div class="card-footer">
+                            <base-button
+                              @click="editItem(item.id)"
+                              size="sm"
+                              type="default"
+                              >Edit</base-button
+                            >
+                            <base-button
+                              @click="showDeleteModal(item.id)"
+                              size="sm"
+                              type="danger"
+                              >Delete</base-button
+                            >
                           </div>
                         </div>
-                        <div class="card-footer">
-                          <base-button
-                            @click="editItem(item.id)"
-                            size="sm"
-                            type="default"
-                            >Edit</base-button
-                          >
-                          <base-button
-                            @click="showDeleteModal(item.id)"
-                            size="sm"
-                            type="danger"
-                            >Delete</base-button
-                          >
-                        </div>
                       </div>
-                    </div>
+                    </draggable>
                   </div>
                 </div>
                 <div v-else class="col">
@@ -135,10 +150,14 @@
 
 <script>
 import DashboardLayout from "../../../layout/DashboardLayout";
+import draggable from "vuedraggable";
 
 export default {
   layout: DashboardLayout,
   props: ["module", "items"],
+  components: {
+    draggable,
+  },
   data() {
     return {
       notification: {
@@ -154,6 +173,7 @@ export default {
         id: null,
         loading: false,
       },
+      newItems: [],
     };
   },
   methods: {
@@ -197,12 +217,40 @@ export default {
         );
       }
     },
+    updateOrder(e) {
+      // this.newItems.forEach((item, index) => {
+      //   item.order = index;
+      // });
+    },
+    saveOrder(e) {
+      this.newItems.forEach((item, index) => {
+        item.order = index;
+      });
+      const items = this.newItems;
+      axios
+        .post(this.$route("items.updateOrder"), {
+          items,
+        })
+        .then((resp) => {
+          console.log("Order updated!");
+        })
+        .catch((err) => {
+          console.log("Unable to update the order!");
+        });
+    },
   },
   created() {
     this.$store.dispatch("assignTitle", this.module.name);
+
+    if (this.items) {
+      this.newItems = this.items;
+    }
   },
 };
 </script>
 
 <style>
+.card {
+  cursor: grab;
+}
 </style>

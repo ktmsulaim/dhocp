@@ -17,6 +17,7 @@ import Viewer from 'v-viewer'
 
 
 
+
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(plugin)
@@ -25,6 +26,7 @@ InertiaProgress.init()
 Vue.use(flatPickr);
 Vue.use(VueFileAgent);
 Vue.use(Viewer);
+
 
 
 Vue.prototype.$route = route

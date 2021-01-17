@@ -68,6 +68,8 @@ Route::prefix('admin')->group(function () {
         Route::patch('/item/{item}', [ItemController::class, 'update'])->name('items.update');
         Route::post('/item/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
+        Route::post('/items/updateOrder', [ItemController::class, 'updateOrder'])->name('items.updateOrder');
+
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
 });
