@@ -11,6 +11,8 @@
       false-value="0"
       :disabled="disabled"
       v-model="model"
+      :multiple="multiple"
+      :name="name"
     />
     <label :for="cbId" class="custom-control-label">
       <slot>
@@ -39,6 +41,14 @@ export default {
     inline: {
       type: Boolean,
       description: "Whether checkbox is inline",
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+      description: "Can select one or more items",
+    },
+    name: {
+      type: String,
     },
   },
   data() {

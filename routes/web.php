@@ -80,7 +80,8 @@ Route::prefix('admin')->group(function () {
 
         Route::post('/students/{id}/items/update', [ItemController::class, 'updateUserItems'])->name('admin.modules.updateItems');
 
-        Route::get('/students/export', [StudentExportController::class, 'export'])->name('students.export.prep');
+        Route::get('/export/students', [StudentExportController::class, 'index'])->name('export.students.index');
+        Route::post('/export/students', [StudentExportController::class, 'export'])->name('export.students');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

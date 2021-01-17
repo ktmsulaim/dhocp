@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function getItemsByModule($module_id)
     {
-        return $this->items()->where('module_id', $module_id)->get();
+        return $this->items()->where('module_id', $module_id)->orderBy('order', 'asc')->get();
     }
 
     /**

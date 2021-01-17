@@ -29,27 +29,34 @@
                 </div>
               </div>
               <div class="row align-items-center mt-3">
-                <div class="col d-flex justify-content-center">
-                  <base-dropdown v-if="batches && batches.length > 0">
+                <div class="col d-flex justify-content-between">
+                  <div>
                     <base-button
-                      slot="title"
-                      type="secondary"
-                      class="dropdown-toggle"
+                      @click="$inertia.get($route('export.students.index'))"
+                      type="info"
+                      >Export data</base-button
                     >
-                      Select a batch
-                    </base-button>
-                    <inertia-link
-                      :href="link + `?batch=${batch.id}`"
-                      class="dropdown-item"
-                      v-for="(batch, i) in batches"
-                      :key="i"
-                      >{{ batch.name }}</inertia-link
-                    >
-                    <div class="dropdown-divider"></div>
-                    <inertia-link :href="link" class="dropdown-item"
-                      >All students</inertia-link
-                    >
-                  </base-dropdown>
+                    <base-dropdown v-if="batches && batches.length > 0">
+                      <base-button
+                        slot="title"
+                        type="secondary"
+                        class="dropdown-toggle"
+                      >
+                        Select a batch
+                      </base-button>
+                      <inertia-link
+                        :href="link + `?batch=${batch.id}`"
+                        class="dropdown-item"
+                        v-for="(batch, i) in batches"
+                        :key="i"
+                        >{{ batch.name }}</inertia-link
+                      >
+                      <div class="dropdown-divider"></div>
+                      <inertia-link :href="link" class="dropdown-item"
+                        >All students</inertia-link
+                      >
+                    </base-dropdown>
+                  </div>
                   <base-input
                     placeholder="Search students"
                     v-model="search"
