@@ -45,7 +45,7 @@
                       class="row"
                       :list="newItems"
                       group="Items"
-                      handle=".card"
+                      handle=".card-header"
                       dataIdAttr="data-id"
                       :move="updateOrder"
                       @change="saveOrder"
@@ -59,7 +59,7 @@
                         class="col col-md-6 my-3"
                       >
                         <div class="card">
-                          <div class="card-header">
+                          <div class="card-header hanlder">
                             <h4>{{ item.label }}</h4>
                           </div>
                           <div class="card-body">
@@ -249,8 +249,8 @@ export default {
 };
 </script>
 
-<style>
-.card {
+<style scoped>
+.hanlder {
   cursor: grab;
 }
 </style>

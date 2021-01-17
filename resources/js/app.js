@@ -17,7 +17,6 @@ import Viewer from 'v-viewer'
 
 
 
-
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(plugin)

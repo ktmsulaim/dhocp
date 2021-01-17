@@ -69,6 +69,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/item/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
         Route::post('/items/updateOrder', [ItemController::class, 'updateOrder'])->name('items.updateOrder');
+        Route::post('/items/{id}/download', [ItemController::class, 'download'])->name('items.download');
+
+        Route::post('/students/{id}/items/update', [ItemController::class, 'updateUserItems'])->name('admin.modules.updateItems');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

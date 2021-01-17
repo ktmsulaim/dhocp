@@ -29,6 +29,7 @@
         "@inertiajs/inertia-vue": "^0.5.4",
         "@inertiajs/progress": "^0.2.4",
         "bootstrap-vue": "^2.21.2",
+        "js-file-download": "^0.4.12",
         "nouislider": "^14.6.3",
         "v-viewer": "^1.5.1",
         "vue-file-agent": "^1.7.3",

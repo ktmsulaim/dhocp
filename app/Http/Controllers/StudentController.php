@@ -170,6 +170,16 @@ class StudentController extends Controller
                 'itemGroups' => ItemGroup::where(['module_id' => $module_id, 'user_id' => $user->id])->with('itemUsers')->get(),
             ];
         } else {
+            if ($module->items()->exists()) {
+                foreach ($module->items as $key => $item) {
+                    if (!$user->hasItem($item)) {
+                        $user->items()->attach([
+                            'item_id' => $item->id,
+                        ]);
+                    }
+                }
+            }
+
             $items = $user->getItemsByModule($module_id);
         }
 

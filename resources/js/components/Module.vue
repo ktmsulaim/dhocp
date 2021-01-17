@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div v-if="loading">
+    <div class="d-flex align-items-center justify-content-center">
+      <loader size="50" color="#444444"></loader>
+    </div>
+  </div>
+  <div v-else>
     <div v-if="module.repeatable == 1">
       <div class="container">
         <div class="row" v-if="itemGroups && itemGroups.length > 0">
@@ -47,47 +52,137 @@
         </div>
       </div>
     </div>
-    <div v-else-if="module.office_use == 1"></div>
     <div v-else>
-      <div v-if="items && items.length > 0">
-        <div class="row">
-          <div
-            v-for="item in items"
-            :key="item.id"
-            class="box"
-            :class="getInputSize(item)"
-          >
-            <p class="form-control-label">
-              <b>{{ item.label }}</b>
-            </p>
-            <div class="my-2">
-              <div v-if="item.pivot.value">
-                <span v-if="item.type == 'dropdown'">
-                  {{ getOptionName(item.pivot.value, item) }}
-                </span>
-                <span v-else-if="item.type == 'checkbox'">
-                  {{ item.pivot.value == 1 ? "Yes" : "No" }}
-                </span>
-                <div v-else-if="item.type == 'file'">
-                  <div v-if="isImage(item.pivot.value_info)">
-                    <img width="150" :src="item.pivot.value" alt="" />
-                  </div>
-                  <div v-else>Non image file uploaded!</div>
-                </div>
-                <span v-else>
-                  {{ item.pivot.value }}
-                </span>
+      <div v-if="module.office_use == 1">
+        <div v-if="items && items.length > 0">
+          <div class="row">
+            <div
+              v-for="item in items"
+              :key="item.id"
+              class="box"
+              :class="getInputSize(item)"
+            >
+              <div class="d-flex align-items-center justify-content-between">
+                <p class="form-control-label">
+                  <b>{{ item.label }}</b>
+                </p>
+                <admin-item-edit
+                  @update="fetchData"
+                  :repeatable="module.repeatable"
+                  :item="item"
+                ></admin-item-edit>
               </div>
-              <span v-else class="text-danger">No data</span>
-            </div>
-            <div v-if="item.pivot.value" class="mt-2">
-              <item-status role="admin" :item="item"></item-status>
+              <div class="my-2">
+                <div v-if="item.pivot.value">
+                  <span v-if="item.type == 'dropdown'">
+                    {{ getOptionName(item.pivot.value, item) }}
+                  </span>
+                  <span v-else-if="item.type == 'checkbox'">
+                    {{ item.pivot.value == 1 ? "Yes" : "No" }}
+                  </span>
+                  <div v-else-if="item.type == 'file'">
+                    <div v-if="isImage(item.pivot.value_info)">
+                      <img width="150" :src="item.pivot.value" alt="" />
+                    </div>
+                    <div v-else>
+                      <div class="my-2">
+                        <img width="150" src="/img/file.png" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                  <span v-else>
+                    {{ item.pivot.value }}
+                  </span>
+                </div>
+                <div v-else>
+                  <span class="text-danger">No data!</span>
+                </div>
+              </div>
+              <div v-if="item.pivot.value" class="mt-3">
+                <item-status role="admin" :item="item">
+                  <template v-if="item.type == 'file'" slot="docViewer">
+                    <div class="d-flex align-items-center">
+                      <span
+                        style="cursor: pointer"
+                        @click="downloadFile(item.pivot.id)"
+                        class="mx-3"
+                        >Download</span
+                      >
+                      <file-viewer
+                        :type="isImage(item.pivot.value_info) ? 'image' : 'doc'"
+                        :item="item"
+                      />
+                    </div>
+                  </template>
+                </item-status>
+              </div>
             </div>
           </div>
         </div>
+        <div v-else>
+          <p>No data!</p>
+        </div>
       </div>
       <div v-else>
-        <p>No data!</p>
+        <div v-if="items && items.length > 0">
+          <div class="row">
+            <div
+              v-for="item in items"
+              :key="item.id"
+              class="box"
+              :class="getInputSize(item)"
+            >
+              <p class="form-control-label">
+                <b>{{ item.label }}</b>
+              </p>
+              <div class="my-2">
+                <div v-if="item.pivot.value">
+                  <span v-if="item.type == 'dropdown'">
+                    {{ getOptionName(item.pivot.value, item) }}
+                  </span>
+                  <span v-else-if="item.type == 'checkbox'">
+                    {{ item.pivot.value == 1 ? "Yes" : "No" }}
+                  </span>
+                  <div v-else-if="item.type == 'file'">
+                    <div v-if="isImage(item.pivot.value_info)">
+                      <img width="150" :src="item.pivot.value" alt="" />
+                    </div>
+                    <div v-else>
+                      <div class="my-2">
+                        <img width="150" src="/img/file.png" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                  <span v-else>
+                    {{ item.pivot.value }}
+                  </span>
+                </div>
+                <span v-else class="text-danger">No data</span>
+              </div>
+              <div v-if="item.pivot.value" class="mt-3">
+                <item-status role="admin" :item="item">
+                  <template v-if="item.type == 'file'" slot="docViewer">
+                    <div class="d-flex align-items-center">
+                      <span
+                        style="cursor: pointer"
+                        @click="downloadFile(item.pivot.id)"
+                        class="mx-3"
+                        >Download</span
+                      >
+                      <file-viewer
+                        :type="isImage(item.pivot.value_info) ? 'image' : 'doc'"
+                        :item="item"
+                      />
+                    </div>
+                  </template>
+                </item-status>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <p>No data!</p>
+        </div>
       </div>
     </div>
   </div>
@@ -95,15 +190,22 @@
 
 <script>
 import ItemStatus from "./ItemStatus";
+import FileViewer from "./FileViewer";
+import Loader from "./Loader";
+import AdminItemEdit from "./AdminItemEdit";
 
 export default {
   props: ["module", "studentId"],
   components: {
     ItemStatus,
+    FileViewer,
+    Loader,
+    AdminItemEdit,
   },
   data() {
     return {
       items: [],
+      loading: true,
     };
   },
   computed: {
@@ -119,6 +221,28 @@ export default {
     },
   },
   methods: {
+    fetchData() {
+      if (this.studentId && this.module) {
+        axios
+          .get(
+            this.$route("admin.students.items", {
+              module: this.module.id,
+              id: this.studentId,
+            })
+          )
+          .then((resp) => {
+            this.items = resp.data;
+          })
+          .catch((err) => {
+            console.log(
+              `Unable to load the items for module ${this.module.name}!`
+            );
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
+    },
     getInputSize(item) {
       if (item && item.size) {
         const size = item.size;
@@ -167,25 +291,22 @@ export default {
         );
       }
     },
-  },
-  created() {
-    if (this.studentId && this.module) {
-      axios
-        .get(
-          this.$route("admin.students.items", {
-            module: this.module.id,
-            id: this.studentId,
-          })
-        )
+    downloadFile(itemId) {
+      axios({
+        method: "POST",
+        url: this.$route("items.download", { id: itemId }),
+        responseType: "blob",
+      })
         .then((resp) => {
-          this.items = resp.data;
+          FileDownload(resp.data, resp.headers[1]);
         })
         .catch((err) => {
-          console.log(
-            `Unable to load the items for module ${this.module.name}!`
-          );
+          console.log("Unable to download the file!");
         });
-    }
+    },
+  },
+  created() {
+    this.fetchData();
   },
 };
 </script>

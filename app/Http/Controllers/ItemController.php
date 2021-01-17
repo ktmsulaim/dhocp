@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemGroup;
+use App\Models\ItemUser;
 use App\Models\Module;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 
@@ -161,5 +165,63 @@ class ItemController extends Controller
                 $itemObj->save();
             }
         }
+    }
+
+
+    public function download($id)
+    {
+        $itemUser = ItemUser::find($id);
+        $fileInfo = json_decode($itemUser->value_info, true);
+        $user = User::findOrFail($itemUser->user_id);
+        $item = Item::findOrFail($itemUser->item_id);
+        $fileName = $user->enroll_no . ' - ' . $item->label . '.' . $fileInfo['ext'];
+
+        $file = public_path('uploads') . DIRECTORY_SEPARATOR . $fileInfo['name'];
+        $headers = array('Content-Type: ' . $fileInfo['type'], $fileName);
+        return Response::download($file, $fileName, $headers);
+    }
+
+
+    public function updateUserItems(Request $request, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        if ($request->has('data') && count($request->data) > 0) {
+            foreach ($request->data as $key => $data) {
+                $item = Item::find($key);
+                $module = $item->module;
+                $itemGroup = null;
+
+                // if item type is file return back()
+                if ($item->type == 'file') Redirect::back();
+
+
+                if ($module->repeatable == 1 && !$request->has('item_group_id')) Redirect::back();
+
+                if ($module->repeatable == 1 && $request->has('item_group_id')) {
+                    $itemGroup = ItemGroup::find($request->item_group_id);
+                }
+
+
+                if ($user->hasItem($item, $itemGroup)) {
+                    if ($itemGroup) {
+                        $itemUser = ItemUser::where(['item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
+                    } else {
+                        $itemUser = ItemUser::where(['item_id' => $item->id])->first();
+                    }
+
+                    $itemUser->value = $data;
+                    $itemUser->save();
+                } else {
+                    $itemGroup->itemUsers()->create([
+                        'item_id' => $item->id,
+                        'user_id' => $user_id,
+                        'value' => $data,
+                    ]);
+                }
+            }
+        }
+
+        return Redirect::back();
     }
 }

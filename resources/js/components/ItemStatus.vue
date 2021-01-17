@@ -1,8 +1,13 @@
 <template>
   <div class="d-flex align-items-center justify-content-between">
-    <badge :type="status.type">{{ status.name }}</badge>
-    <div v-if="role == 'admin'" class="d-flex align-items-center">
-      <div class="mx-3">
+    <div class="d-flex align-items-center">
+      <div class="mx-2">
+        <badge :type="status.type">{{ status.name }}</badge>
+      </div>
+      <slot name="docViewer" />
+    </div>
+    <div class="d-flex align-items-center">
+      <div v-if="role == 'admin'" class="mx-3">
         <base-button
           :disabled="buttonDisable"
           @click="updateStatus(2)"
@@ -28,17 +33,17 @@
           title="Invalidate"
         ></base-button>
       </div>
-    </div>
-    <div v-if="currentStatus == 0">
-      <span
-        data-toggle="tooltip"
-        data-placement="top"
-        title="Invalid message"
-        class="size-20"
-        preserve-scroll
-        @click="modals.form = !modals.form"
-        ><span class="ni ni-chat-round"></span
-      ></span>
+      <div v-if="currentStatus == 0">
+        <span
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Invalid message"
+          class="size-20"
+          preserve-scroll
+          @click="modals.form = !modals.form"
+          ><span class="ni ni-chat-round"></span
+        ></span>
+      </div>
     </div>
 
     <!-- Modals -->

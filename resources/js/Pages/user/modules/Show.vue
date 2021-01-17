@@ -18,7 +18,7 @@
                     >Add record</base-button
                   >
                   <base-button
-                    v-else
+                    v-else-if="module.office_use == 0"
                     @click="$inertia.get(`/modules/${module.id}/editRecord/`)"
                     >Edit record</base-button
                   >
@@ -104,9 +104,6 @@
                   </div>
                 </div>
               </div>
-              <div v-else-if="module.office_use == 1" class="">
-                <p>Office use</p>
-              </div>
               <div v-else>
                 <div v-if="items && items.length > 0">
                   <div class="row">
@@ -130,18 +127,10 @@
                           <div v-else-if="item.type == 'file'">
                             <div v-if="isImage(item.pivot.value_info)">
                               <img width="150" :src="item.pivot.value" alt="" />
-                              <div class="d-flex align-items-center mt-3">
-                                <span class="mx-3">Download</span>
-                                <file-viewer type="image" :item="item" />
-                              </div>
                             </div>
                             <div v-else>
                               <div class="my-2">
                                 <img width="150" src="/img/file.png" alt="" />
-                              </div>
-                              <div class="d-flex align-items-center">
-                                <span class="mx-3">Download</span>
-                                <file-viewer type="doc" :item="item" />
                               </div>
                             </div>
                           </div>
@@ -152,7 +141,16 @@
                         <span v-else class="text-danger">No data</span>
                       </div>
                       <div v-if="item.pivot.value" class="mt-2">
-                        <item-status role="user" :item="item"></item-status>
+                        <item-status role="user" :item="item">
+                          <template slot="docViewer">
+                            <file-viewer
+                              :type="
+                                isImage(item.pivot.value_info) ? 'image' : 'doc'
+                              "
+                              :item="item"
+                            />
+                          </template>
+                        </item-status>
                       </div>
                     </div>
                   </div>

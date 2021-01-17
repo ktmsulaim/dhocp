@@ -50,8 +50,39 @@ class UserModuleController extends Controller
 
     public function addRecord(Module $module)
     {
+
+        if ($module->office_use == 1 || !$module->isRepeatable()) {
+            return Redirect::route('user.modules.index');
+        }
+
         return Inertia::render('user/modules/Create', [
             'module' => $module->load('items'),
+        ]);
+    }
+
+    public function editRecord(Module $module, $itemGroup = null)
+    {
+        if ($module->office_use == 1) {
+            return Redirect::route('user.modules.index');
+        }
+
+        $user = Auth::user();
+
+        if ($module->isRepeatable() && !$itemGroup) Redirect::back();
+
+
+        if ($module->isRepeatable()) {
+            //Exact itemUser objects
+            $ig = ItemGroup::find($itemGroup);
+            $itemUsers = $ig->itemUsers;
+        } else {
+            // Items with pivot
+            $itemUsers = $user->items()->where('module_id', $module->id)->get();
+        }
+
+        return Inertia::render('user/modules/Edit', [
+            'module' => $module->load('items'),
+            'itemUsers' => $itemUsers,
         ]);
     }
 
@@ -101,11 +132,10 @@ class UserModuleController extends Controller
                 $module = $item->module;
                 $itemGroup = null;
 
-                // if item type is file return back()
-                if ($item->type == 'file') Redirect::back();
 
-
-                if ($module->repeatable == 1 && !$request->has('item_group_id')) Redirect::back();
+                if ($item->type == 'file' || ($module->repeatable == 1 && !$request->has('item_group_id'))) {
+                    return Redirect::back();
+                }
 
                 if ($module->repeatable == 1 && $request->has('item_group_id')) {
                     $itemGroup = ItemGroup::find($request->item_group_id);
@@ -134,26 +164,6 @@ class UserModuleController extends Controller
         return Redirect::route('user.modules.show', $request->module_id);
     }
 
-    public function editRecord(Module $module, $itemGroup = null)
-    {
-        $user = Auth::user();
-
-        if ($module->isRepeatable() && !$itemGroup) Redirect::back();
-
-        if ($module->isRepeatable()) {
-            //Exact itemUser objects
-            $ig = ItemGroup::find($itemGroup);
-            $itemUsers = $ig->itemUsers;
-        } else {
-            // Items with pivot
-            $itemUsers = $user->items()->where('module_id', $module->id)->get();
-        }
-
-        return Inertia::render('user/modules/Edit', [
-            'module' => $module->load('items'),
-            'itemUsers' => $itemUsers,
-        ]);
-    }
 
     public function deleteItemRecord(ItemGroup $itemGroup)
     {
