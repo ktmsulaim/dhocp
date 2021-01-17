@@ -45,6 +45,11 @@ class User extends Authenticatable
         $this->attributes['dob_password'] = bcrypt($value);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
+    }
+
     public function batch()
     {
         return $this->belongsTo(Batch::class);

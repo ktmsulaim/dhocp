@@ -15,7 +15,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest', ['except' => ['suspended', 'logout']]);
     }
 
     public function username()
@@ -40,5 +40,10 @@ class AuthController extends Controller
         }
 
         return Redirect::route('user.index');
+    }
+
+    public function suspended()
+    {
+        return Inertia::render('user/Suspended');
     }
 }

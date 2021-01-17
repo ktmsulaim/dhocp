@@ -8,6 +8,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentExportController;
 use App\Http\Controllers\UserModuleController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,18 +18,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', [AppController::class, 'index'])->name('user.index');
 
-    Route::get('/modules', [UserModuleController::class, 'index'])->name('user.modules.index');
-    Route::get('/modules/{module}', [UserModuleController::class, 'show'])->name('user.modules.show');
-    Route::get('/modules/{module}/addRecord', [UserModuleController::class, 'addRecord'])->name('user.modules.addRecord');
-    Route::get('/modules/{module}/editRecord/{itemGroupId?}', [UserModuleController::class, 'editRecord'])->name('user.modules.editRecord');
-    Route::post('/modules/items/create', [UserModuleController::class, 'createUserItems'])->name('user.modules.createItems');
-    Route::post('/modules/items/update', [UserModuleController::class, 'updateUserItems'])->name('user.modules.updateItems');
-    Route::post('/modules/items/delete/{itemGroup}', [UserModuleController::class, 'deleteItemRecord'])->name('user.modules.deleteRecord');
-    Route::post('/modules/items/fileupload', [UserModuleController::class, 'uploadFile'])->name('user.fileupload');
-    Route::post('/modules/items/deleteUpload', [UserModuleController::class, 'deleteFile'])->name('user.deleteUpload');
+Route::middleware('auth')->group(function () {
+
+    Route::middleware('user.active')->group(function () {
+        Route::get('/', [AppController::class, 'index'])->name('user.index');
+
+        Route::get('/modules', [UserModuleController::class, 'index'])->name('user.modules.index');
+        Route::get('/modules/{module}', [UserModuleController::class, 'show'])->name('user.modules.show');
+        Route::get('/modules/{module}/addRecord', [UserModuleController::class, 'addRecord'])->name('user.modules.addRecord');
+        Route::get('/modules/{module}/editRecord/{itemGroupId?}', [UserModuleController::class, 'editRecord'])->name('user.modules.editRecord');
+        Route::post('/modules/items/create', [UserModuleController::class, 'createUserItems'])->name('user.modules.createItems');
+        Route::post('/modules/items/update', [UserModuleController::class, 'updateUserItems'])->name('user.modules.updateItems');
+        Route::post('/modules/items/delete/{itemGroup}', [UserModuleController::class, 'deleteItemRecord'])->name('user.modules.deleteRecord');
+        Route::post('/modules/items/fileupload', [UserModuleController::class, 'uploadFile'])->name('user.fileupload');
+        Route::post('/modules/items/deleteUpload', [UserModuleController::class, 'deleteFile'])->name('user.deleteUpload');
+    });
+
+    Route::get('/suspended', [AuthController::class, 'suspended'])->name('user.suspended');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
@@ -72,6 +79,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/items/{id}/download', [ItemController::class, 'download'])->name('items.download');
 
         Route::post('/students/{id}/items/update', [ItemController::class, 'updateUserItems'])->name('admin.modules.updateItems');
+
+        Route::get('/students/export', [StudentExportController::class, 'export'])->name('students.export.prep');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
