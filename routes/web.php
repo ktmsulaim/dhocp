@@ -9,6 +9,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentExportController;
+use App\Http\Controllers\StudentsImportController;
 use App\Http\Controllers\UserModuleController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +83,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/export/students', [StudentExportController::class, 'index'])->name('export.students.index');
         Route::post('/export/students', [StudentExportController::class, 'export'])->name('export.students');
+
+        Route::get('/import/students', [StudentsImportController::class, 'index'])->name('import.students.index');
+        Route::post('/import/students', [StudentsImportController::class, 'import'])->name('import.students');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

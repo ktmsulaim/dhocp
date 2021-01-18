@@ -20,4 +20,9 @@ class ItemGroup extends Model
     {
         return $this->hasMany(ItemUser::class);
     }
+
+    public function orderedItemUsers()
+    {
+        return $this->itemUsers()->join('items', 'item_user.item_id', '=', 'items.id')->orderBy('items.order')->select('item_user.*')->get();
+    }
 }

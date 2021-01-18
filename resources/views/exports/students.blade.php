@@ -9,7 +9,7 @@
                 </th>
             @endforeach
         </tr>
-        <tr>
+        <tr style="border-bottom: 2px solid #00000; vertical-align: middle">
             <th></th>
             @foreach ($modules as $module2)
                 @if (count($module2->items) > 0)
@@ -25,24 +25,29 @@
     <tbody>
         @if (count($students) > 0)
             @foreach ($students as $key => $student)
-                @php
-                $items = \App\Models\ItemUser::where('user_id', $student->id)->join('items', 'items.id', '=',
-                'item_user.item_id')->join('modules', 'modules.id', '=',
-                'items.module_id')->orderBy('modules.id')->orderBy('items.order', 'ASC')->select('item_user.*')->get();
-                @endphp
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    @if ($items && count($items) > 0)
-                        @foreach ($items as $userItem)
-                            @if (!empty($userItem->value))
-                                <td>{{ $userItem->value }}</td>
+                    @foreach ($modules as $module3)
+                        @if ($module3->itemUsers()->exists())
+                            @if ($module3->isRepeatable())
+                                @php
+                                // get latest group
+                                $itemGroup = $module3->itemGroups()->where('user_id', $student->id)->latest()->first();
+                                @endphp
+                                @if ($itemGroup && $itemGroup->itemUsers)
+                                    @foreach ($itemGroup->orderedItemUsers() as $itemUser)
+                                        <td>{{ $itemUser->getValue() }}</td>
+                                    @endforeach
+                                @endif
                             @else
-                                <td></td>
+                                @foreach ($module3->orderedItemUsers() as $itemUser)
+                                    <td>{{ $itemUser->getValue() }}</td>
+                                @endforeach
                             @endif
-                        @endforeach
-                    @else
-                        <td></td>
-                    @endif
+                        @else
+                            <td></td>
+                        @endif
+                    @endforeach
                 </tr>
             @endforeach
         @endif

@@ -21,6 +21,11 @@
                 </div>
                 <div class="col text-right">
                   <base-button
+                    @click="$inertia.get($route('import.students.index'))"
+                    type="info"
+                    >Import</base-button
+                  >
+                  <base-button
                     @click="backToStudents"
                     type="primary"
                     icon="ni ni-bold-left"

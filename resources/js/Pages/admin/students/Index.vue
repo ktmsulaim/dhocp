@@ -52,7 +52,9 @@
                         >{{ batch.name }}</inertia-link
                       >
                       <div class="dropdown-divider"></div>
-                      <inertia-link :href="link" class="dropdown-item"
+                      <inertia-link
+                        :href="link + '?batch=all'"
+                        class="dropdown-item"
                         >All students</inertia-link
                       >
                     </base-dropdown>
@@ -134,6 +136,9 @@
                 </td>
               </template>
             </base-table>
+            <div v-else-if="!selectedBatch" class="p-3">
+              <p>Select a batch to see the students!</p>
+            </div>
             <div v-else class="p-3">
               <p>No Students found!</p>
             </div>
@@ -248,7 +253,6 @@ export default {
           return decodeURIComponent(pair[1]);
         }
       }
-      console.log("Query variable %s not found", variable);
     },
     addAStudent() {
       this.$inertia.get(this.$route("students.create"));
@@ -258,7 +262,7 @@ export default {
     pageTitle() {
       const batchId = this.getQueryVariable("batch");
 
-      if (batchId) {
+      if (batchId && batchId != "all") {
         const batch = this.batches.find((bat) => bat.id == batchId);
 
         return `Students in ${batch.name}`;
@@ -277,6 +281,9 @@ export default {
       } else {
         return this.students.data;
       }
+    },
+    selectedBatch() {
+      return this.getQueryVariable("batch");
     },
   },
   created() {

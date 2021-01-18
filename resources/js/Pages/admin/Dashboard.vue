@@ -4,66 +4,42 @@
     <div class="row">
       <div class="col-xl-3 col-lg-6">
         <stats-card
-          title="Total traffic"
+          title="Total Batches"
           type="gradient-red"
-          sub-title="350,897"
-          icon="ni ni-active-40"
+          :sub-title="batches"
+          icon="ni ni-bold"
           class="mb-4 mb-xl-0"
         >
-          <template slot="footer">
-            <span class="text-success mr-2"
-              ><i class="fa fa-arrow-up"></i> 3.48%</span
-            >
-            <span class="text-nowrap">Since last month</span>
-          </template>
         </stats-card>
       </div>
       <div class="col-xl-3 col-lg-6">
         <stats-card
-          title="Total traffic"
+          title="Students"
           type="gradient-orange"
-          sub-title="2,356"
-          icon="ni ni-chart-pie-35"
+          :sub-title="users"
+          icon="ni ni-hat-3"
           class="mb-4 mb-xl-0"
         >
-          <template slot="footer">
-            <span class="text-success mr-2"
-              ><i class="fa fa-arrow-up"></i> 12.18%</span
-            >
-            <span class="text-nowrap">Since last month</span>
-          </template>
         </stats-card>
       </div>
       <div class="col-xl-3 col-lg-6">
         <stats-card
-          title="Sales"
+          title="Modules"
           type="gradient-green"
-          sub-title="924"
-          icon="ni ni-money-coins"
+          :sub-title="modules"
+          icon="ni ni-ungroup"
           class="mb-4 mb-xl-0"
         >
-          <template slot="footer">
-            <span class="text-danger mr-2"
-              ><i class="fa fa-arrow-down"></i> 5.72%</span
-            >
-            <span class="text-nowrap">Since last month</span>
-          </template>
         </stats-card>
       </div>
       <div class="col-xl-3 col-lg-6">
         <stats-card
-          title="Performance"
+          title="Admins"
           type="gradient-info"
-          sub-title="49,65%"
-          icon="ni ni-chart-bar-32"
+          :sub-title="admins"
+          icon="ni ni-circle-08"
           class="mb-4 mb-xl-0"
         >
-          <template slot="footer">
-            <span class="text-success mr-2"
-              ><i class="fa fa-arrow-up"></i> 54.8%</span
-            >
-            <span class="text-nowrap">Since last month</span>
-          </template>
         </stats-card>
       </div>
     </div>
@@ -73,7 +49,7 @@
 <script>
 import DashboardLayout from "../../layout/DashboardLayout";
 export default {
-  props: ["user"],
+  props: ["user", "batches", "users", "modules", "admins"],
   layout: DashboardLayout,
   methods: {},
   created() {

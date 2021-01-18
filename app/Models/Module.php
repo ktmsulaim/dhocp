@@ -40,4 +40,14 @@ class Module extends Model
     {
         return $this->repeatable == 1;
     }
+
+    public function itemUsers()
+    {
+        return $this->hasManyThrough(ItemUser::class, Item::class);
+    }
+
+    public function orderedItemUsers()
+    {
+        return $this->itemUsers()->orderBy('order')->get();
+    }
 }

@@ -36,6 +36,6 @@ class Item extends Model
 
     public function users()
     {
-        return $this->belongsToMany(ItemUser::class, 'item_users');
+        return $this->belongsToMany(ItemUser::class, 'item_user');
     }
 }

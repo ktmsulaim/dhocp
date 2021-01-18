@@ -27,6 +27,8 @@ class StudentController extends Controller
         $batch = request()->input('batch');
 
         if (!$batch) {
+            $students = [];
+        } elseif ($batch == 'all') {
             $students = ResourcesUser::collection(User::all());
         } else {
             $batch = Batch::findOrFail($batch);
