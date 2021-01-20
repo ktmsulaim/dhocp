@@ -92,7 +92,13 @@ class StudentController extends Controller
     public function show($id)
     {
         $student = User::findOrFail($id);
-        $modules = Module::active()->get();
+        $modules = Module::all();
+
+        if ($modules && count($modules) > 0) {
+            foreach ($modules as $key => $module) {
+                $module->{'hasDownloadableFiles'} = $module->hasDownloadableFiles($student->id);
+            }
+        }
 
         return Inertia::render('admin/students/Show', [
             'student' => new ResourcesUser($student),

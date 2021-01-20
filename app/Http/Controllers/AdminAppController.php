@@ -7,6 +7,7 @@ use App\Models\Batch;
 use App\Models\Module;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class AdminAppController extends Controller
@@ -25,6 +26,9 @@ class AdminAppController extends Controller
 
     public function profile()
     {
-        return Inertia::render('admin/Profile');
+        $admin = auth('admin')->user();
+        return Inertia::render('admin/Profile', [
+            'admin' => $admin,
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\User;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,13 +14,14 @@ class AppController extends Controller
         $data = [];
         $user = auth()->user();
 
-        $modules = Module::active()->public()->get();
+        $modules = Module::active()->get();
 
         if ($modules && count($modules) > 0) {
             foreach ($modules as $key => $module) {
                 if ($module->isRepeatable()) {
                     array_push($data, [
                         'module' => $module,
+                        'hasInvalid' => $module->hasInvalid($user->id),
                         'total_items' => $user->itemGroups()->where('module_id', $module->id)->count(),
                         'total_pending' => $user->validItems($module->id, 1),
                         'total_valid' => $user->validItems($module->id, 2),
@@ -28,6 +30,7 @@ class AppController extends Controller
                 } else {
                     array_push($data, [
                         'module' => $module,
+                        'hasInvalid' => $module->hasInvalid($user->id),
                         'total_items' => count($module->items),
                         'total_attended' => $user->totalAttended($module->id),
                         'total_attended_perc' => $this->getPercentage(count($module->items), $user->validItems($module->id, 2)),
@@ -42,6 +45,7 @@ class AppController extends Controller
         return Inertia::render('user/Index', [
             'user' => $user,
             'modules' => $data,
+            'invalidAlert' => $user->invalidAlert(),
         ]);
     }
 
@@ -56,5 +60,14 @@ class AppController extends Controller
         } else {
             return 0;
         }
+    }
+
+
+    public function profile()
+    {
+        $user = new User(auth()->user());
+        return Inertia::render('user/Profile', [
+            'user' => $user,
+        ]);
     }
 }

@@ -75,7 +75,26 @@
             class="card shadow my-3"
           >
             <div class="card-header">
-              <h4>{{ module.name }}</h4>
+              <div class="row align-item-center">
+                <div class="col">
+                  <h4>{{ module.name }}</h4>
+                </div>
+                <div v-if="module.status == 0" class="col text-right">
+                  <badge type="danger">Disabled</badge>
+                </div>
+                <div
+                  v-else-if="module.hasDownloadableFiles == true"
+                  class="col text-right"
+                >
+                  <base-button
+                    :loading="download.loading"
+                    :disabled="download.loading"
+                    @click="downloadZip(module.id)"
+                    icon="ni ni-archive-2"
+                    >Download zip</base-button
+                  >
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <module :module="module" :studentId="student.data.id" />
@@ -92,6 +111,13 @@ import DashboardLayout from "../../../layout/DashboardLayout";
 import Module from "../../../components/Module";
 export default {
   props: ["student", "modules"],
+  data() {
+    return {
+      download: {
+        loading: false,
+      },
+    };
+  },
   layout: DashboardLayout,
   components: {
     Module,
@@ -105,6 +131,29 @@ export default {
         this.$inertia.get(
           this.$route("students.edit", { id: this.student.data.id })
         );
+      }
+    },
+    downloadZip(moduleId) {
+      if (moduleId) {
+        this.download.loading = true;
+        axios({
+          method: "POST",
+          url: this.$route("admin.modules.downloadFiles", {
+            module: moduleId,
+            id: this.student.data.id,
+          }),
+          responseType: "blob",
+        })
+          .then((resp) => {
+            FileDownload(resp.data, resp.headers[1]);
+            console.log("Zip archive saved!");
+          })
+          .catch((err) => {
+            console.log("Error archiving files!");
+          })
+          .finally(() => {
+            this.download.loading = false;
+          });
       }
     },
   },

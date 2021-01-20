@@ -50,4 +50,51 @@ class Module extends Model
     {
         return $this->itemUsers()->orderBy('order')->get();
     }
+
+    public function hasInvalid($user_id)
+    {
+        return $this->itemUsers()->where(['user_id' => $user_id, 'is_valid' => 0])->count() > 0;
+    }
+
+    public function hasDownloadableFiles($user_id)
+    {
+        $items = $this->itemUsers()->with('item')->where('user_id', $user_id)->get();
+        $files = [];
+
+        if ($items && count($items) > 0) {
+            foreach ($items as $key => $item) {
+                if ($item->item->type == 'file' && !empty($item->value_info)) {
+                    $file_info = json_decode($item->value_info, true);
+                    $file = public_path('uploads' . DIRECTORY_SEPARATOR . $file_info['name']);
+                    if (file_exists($file)) {
+                        array_push($files, $file);
+                    }
+                }
+            }
+        }
+
+        return count($files) > 0;
+    }
+
+    public function getDownloadableFiles($user_id)
+    {
+        if ($this->hasDownloadableFiles($user_id)) {
+            $items = $this->itemUsers()->with('item')->where('user_id', $user_id)->get();
+            $files = [];
+
+            if ($items && count($items) > 0) {
+                foreach ($items as $key => $item) {
+                    if ($item->item->type == 'file' && !empty($item->value_info)) {
+                        $file_info = json_decode($item->value_info, true);
+                        $file = public_path('uploads' . DIRECTORY_SEPARATOR . $file_info['name']);
+                        if (file_exists($file)) {
+                            array_push($files, ['file' => $file, 'newName' => $item->item->label . '.' . $file_info['ext']]);
+                        }
+                    }
+                }
+            }
+
+            return $files;
+        }
+    }
 }

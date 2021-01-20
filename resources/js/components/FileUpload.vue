@@ -9,10 +9,10 @@
       :compact="true"
       :accept="'image/*, .pdf'"
       :helpText="'Drag an image / pdf file here'"
-      :maxSize="'10MB'"
+      :maxSize="'5MB'"
       :errorText="{
         type: 'Please select an image / pdf',
-        size: 'Files should not exceed 10MB in size',
+        size: 'Files should not exceed 5MB in size',
       }"
       v-model="file"
       @select="onSelect($event)"
@@ -30,7 +30,7 @@
           </p>
           <p class="small">{{ item.description }}</p>
           <p class="small"><b>Supported: </b><span>Images, PDF</span></p>
-          <p class="small"><b>Max.Size: </b><span>10MB</span></p>
+          <p class="small"><b>Max.Size: </b><span>5MB</span></p>
           <div class="drop-help-text">
             <p class="text-success">Drop the file!</p>
           </div>

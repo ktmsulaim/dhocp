@@ -28,6 +28,7 @@ class StudentExportController extends Controller
     {
         $modules = null;
         $students = User::active()->get();
+        $name = 'Students';
 
         if (empty($request->students)) {
             return Redirect::back();
@@ -48,15 +49,19 @@ class StudentExportController extends Controller
 
             if ($std == 'all') {
                 $students = User::all();
+                $name = 'All students';
             } elseif ($std == 'active') {
                 $students = User::active()->get();
+                $name = 'Completed students';
             } else {
                 $students = User::active()->where('batch_id', $std)->get();
+                $batch = Batch::findOrFail($std);
+                $name = $batch->name;
             }
         }
 
 
         // dd($request->all());
-        return Excel::download(new UsersExport($modules, $students), 'users.xlsx', null, [\Maatwebsite\Excel\Excel::XLSX]);
+        return Excel::download(new UsersExport($modules, $students), $name . '.xlsx', null, [\Maatwebsite\Excel\Excel::XLSX]);
     }
 }

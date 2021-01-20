@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'api_token',
+        'image',
         'batch_id',
         'name',
         'enroll_no',
@@ -162,5 +163,35 @@ class User extends Authenticatable
                 return 0;
             }
         }
+    }
+
+    public function invalidAlert()
+    {
+        if ($this->items()->exists()) {
+            $items = [];
+            $modules = [];
+
+            foreach ($this->items as $key => $item) {
+                if ($item->pivot->is_valid == 0) {
+                    $module = $item->module;
+
+                    array_push($items, $item);
+
+                    if (!in_array($module, $modules)) {
+                        array_push($modules, $module);
+                    }
+                }
+            }
+
+            return [
+                'items' => count($items),
+                'modules' => count($modules),
+            ];
+        }
+
+        return [
+            'items' => 0,
+            'modules' => 0,
+        ];
     }
 }

@@ -64,6 +64,14 @@
                     </ol>
                   </div>
                 </div>
+                <div class="col-md-6 order-1 order-md-2">
+                  <h4 class="mb-3">File example</h4>
+                  <img
+                    src="/img/import_sample.jpg"
+                    alt="Import sample"
+                    class="img-fluid"
+                  />
+                </div>
               </div>
 
               <div class="row mt-3">

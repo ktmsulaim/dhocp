@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\ItemGroup;
 use App\Models\ItemUser;
 use App\Models\Module;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Madnest\Madzipper\Madzipper;
 
 class ModuleController extends Controller
 {
@@ -186,5 +188,26 @@ class ModuleController extends Controller
         $ItemGroup->save();
 
         return Redirect::back();
+    }
+
+
+    public function downloadZip(Module $module, $user_id)
+    {
+        $files = $module->getDownloadableFiles($user_id);
+        $student = User::findOrFail($user_id);
+        $filename = $student->enroll_no . '.zip';
+
+        if ($files) {
+            $zipper = new Madzipper;
+            $zipper->make(public_path('archived' . DIRECTORY_SEPARATOR . $filename));
+
+            foreach ($files as $key => $file) {
+                $zipper->add($file['file'], $file['newName']);
+            }
+
+            $zipper->close();
+
+            return response()->download(public_path('archived' . DIRECTORY_SEPARATOR . $filename), $filename, ['Content-type:application/zip', $filename]);
+        }
     }
 }

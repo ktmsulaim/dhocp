@@ -27,20 +27,30 @@
             </div>
             <form @keypress.enter="login" role="form" id="loginForm">
               <base-input
+                type="number"
+                min="0"
                 class="input-group-alternative mb-3"
                 placeholder="Enroll No"
                 addon-left-icon="ni ni-email-83"
                 v-model="form.enroll_no"
               >
               </base-input>
-
               <base-input
                 class="input-group-alternative"
                 placeholder="DOB"
                 type="password"
                 addon-left-icon="ni ni-lock-circle-open"
-                v-model="form.dob"
               >
+                <flat-pickr
+                  placeholder="DOB"
+                  slot-scope="{ focus, blur }"
+                  @on-open="focus"
+                  @on-close="blur"
+                  :config="{ allowInput: true, dateFormat: 'dmY' }"
+                  class="form-control form-control-alternative datepicker"
+                  v-model="form.dob"
+                >
+                </flat-pickr>
               </base-input>
 
               <base-checkbox

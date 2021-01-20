@@ -193,13 +193,12 @@ class ItemController extends Controller
                 $itemGroup = null;
 
                 // if item type is file return back()
-                if ($item->type == 'file') Redirect::back();
-
-
-                if ($module->repeatable == 1 && !$request->has('item_group_id')) Redirect::back();
+                if (($module->repeatable == 1 && !$request->has('item_group_id')) || $item->type == 'file') {
+                    return Redirect::back();
+                }
 
                 if ($module->repeatable == 1 && $request->has('item_group_id')) {
-                    $itemGroup = ItemGroup::find($request->item_group_id);
+                    $itemGroup = ItemGroup::findOrFail($request->item_group_id);
                 }
 
 
@@ -207,7 +206,7 @@ class ItemController extends Controller
                     if ($itemGroup) {
                         $itemUser = ItemUser::where(['item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
                     } else {
-                        $itemUser = ItemUser::where(['item_id' => $item->id])->first();
+                        $itemUser = ItemUser::where(['item_id' => $item->id, 'user_id' => $user->id])->first();
                     }
 
                     $itemUser->value = $data;

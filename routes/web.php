@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('user.active')->group(function () {
         Route::get('/', [AppController::class, 'index'])->name('user.index');
+        Route::get('/profile', [AppController::class, 'profile'])->name('user.profile');
 
         Route::get('/modules', [UserModuleController::class, 'index'])->name('user.modules.index');
         Route::get('/modules/{module}', [UserModuleController::class, 'show'])->name('user.modules.show');
@@ -80,6 +81,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/items/{id}/download', [ItemController::class, 'download'])->name('items.download');
 
         Route::post('/students/{id}/items/update', [ItemController::class, 'updateUserItems'])->name('admin.modules.updateItems');
+
+        Route::post('/modules/{module}/student/{id}/downloadFiles', [ModuleController::class, 'downloadZip'])->name('admin.modules.downloadFiles');
 
         Route::get('/export/students', [StudentExportController::class, 'index'])->name('export.students.index');
         Route::post('/export/students', [StudentExportController::class, 'export'])->name('export.students');
