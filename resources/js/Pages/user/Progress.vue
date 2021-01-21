@@ -15,7 +15,28 @@
               <div v-if="verifications && verifications.length > 0">
                 <div class="row">
                   <div class="col-md-8 mx-auto">
-                    <light-timeline :items="items"></light-timeline>
+                    <!-- <light-timeline :items="items"></light-timeline> -->
+                    <light-timeline :items="items">
+                      <template slot="tag" slot-scope="{ item }">
+                        {{ item.tag }}
+                      </template>
+                      <template slot="symbol" slot-scope="{ item }">
+                        <div
+                          class="item-circle"
+                          :style="{ borderColor: item.color }"
+                        ></div>
+                      </template>
+                      <template slot="content" slot-scope="{ item }">
+                        <div>
+                          {{ item.content }}
+                        </div>
+                        <verification-remarks
+                          role="user"
+                          :verification="item.obj"
+                          :studentID="$page.props.user.id"
+                        ></verification-remarks>
+                      </template>
+                    </light-timeline>
                   </div>
                 </div>
               </div>
@@ -32,10 +53,13 @@
 
 <script>
 import DashboardLayout from "../../layout/users/DashboardLayout";
-
+import VerificationRemarks from "../../components/VerificationRemarks";
 export default {
   layout: DashboardLayout,
   props: ["verifications", "status"],
+  components: {
+    VerificationRemarks,
+  },
   data() {
     return {
       show: true,
@@ -48,6 +72,7 @@ export default {
           const status = this.getStatusByVerification(verification.id);
 
           return {
+            obj: status,
             tag: verification.name,
             color: status && status.status == 1 ? "#28a745" : "#dc3545",
             type: "circle",

@@ -13,25 +13,25 @@
           @click="updateStatus(2)"
           size="sm"
           type="success"
-          icon="ni ni-check-bold"
-          rounded
           v-if="currentStatus != 2"
           data-toggle="tooltip"
           data-placement="top"
           title="Validate"
-        ></base-button>
+        >
+          <b-icon icon="check2-circle"></b-icon>
+        </base-button>
         <base-button
           :disabled="buttonDisable"
           v-if="currentStatus != 0"
           @click="updateStatus(0)"
           size="sm"
           type="danger"
-          icon="ni ni-fat-remove"
-          rounded
           data-toggle="tooltip"
           data-placement="top"
           title="Invalidate"
-        ></base-button>
+        >
+          <b-icon icon="dash-circle"></b-icon>
+        </base-button>
       </div>
       <div v-if="currentStatus == 0">
         <span
@@ -41,8 +41,9 @@
           class="size-20"
           preserve-scroll
           @click="modals.form = !modals.form"
-          ><span class="ni ni-chat-round"></span
-        ></span>
+        >
+          <b-icon icon="chat-right-text"></b-icon>
+        </span>
       </div>
     </div>
 

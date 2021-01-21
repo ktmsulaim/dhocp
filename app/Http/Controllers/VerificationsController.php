@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserVerification as ResourcesUserVerification;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Models\Verification;
@@ -27,6 +28,16 @@ class VerificationsController extends Controller
     public function allVerificationsApi()
     {
         return Verification::enabled()->get();
+    }
+
+    public function getByStudentApi(User $user)
+    {
+        $verifications = UserVerification::where('user_id', $user->id)->get();
+
+        return [
+            'verifications' => Verification::enabled()->get(),
+            'status' => ResourcesUserVerification::collection($verifications),
+        ];
     }
 
     /**
@@ -170,5 +181,49 @@ class VerificationsController extends Controller
         } else {
             return response(['message' => 'No students selected!', 404]);
         }
+    }
+
+    public function studentApprove(Request $request, $id, Verification $verification)
+    {
+        $student = User::findOrFail($id);
+
+        if (!$student->hasVerification($verification->id)) {
+            $student->verifications()->attach($verification->id);
+        }
+
+        $userVerification = UserVerification::where(['user_id' => $id, 'verification_id' => $verification->id])->first();
+        $userVerification->status = 1;
+        $userVerification->save();
+
+        return new ResourcesUserVerification($userVerification);
+    }
+
+    public function studentDisapprove(Request $request, $id, Verification $verification)
+    {
+        $student = User::findOrFail($id);
+
+        if (!$student->hasVerification($verification->id)) {
+            $student->verifications()->attach($verification->id);
+        }
+
+        $userVerification = UserVerification::where(['user_id' => $id, 'verification_id' => $verification->id])->first();
+        $userVerification->status = 0;
+        $userVerification->save();
+
+        return new ResourcesUserVerification($userVerification);
+    }
+
+    public function updateRemarks(Request $request, $id, Verification $verification)
+    {
+        $student = User::findOrFail($id);
+
+        if (!$student->hasVerification($verification->id)) {
+            $student->verifications()->attach($verification->id);
+        }
+
+        $remarks = $request->remarks;
+        $userVerification = UserVerification::where(['user_id' => $id, 'verification_id' => $verification->id])->first();
+        $userVerification->remarks = $remarks;
+        $userVerification->save();
     }
 }

@@ -22,7 +22,7 @@ class UserVerification extends JsonResource
             'status' => $this->status,
             'remarks' => $this->remarks,
             'created_at' => optional($this->created_at)->format('d-m-Y g:i:s A'),
-            'updated_at' => optional($this->created_at)->format('d-m-Y g:i:s A'),
+            'updated_at' => optional($this->updated_at)->format('d-m-Y g:i:s A'),
         ];
     }
 }

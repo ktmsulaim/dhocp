@@ -67,6 +67,18 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div class="card mt-3">
+            <div class="card-header">
+              <h4>Verifications</h4>
+            </div>
+            <div class="card-body">
+              <student-verifications :student="student"></student-verifications>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row" v-if="modules && modules.length > 0">
         <div class="col">
           <div
@@ -109,6 +121,7 @@
 <script>
 import DashboardLayout from "../../../layout/DashboardLayout";
 import Module from "../../../components/Module";
+import StudentVerifications from "./StudentVerifications";
 export default {
   props: ["student", "modules"],
   data() {
@@ -121,6 +134,7 @@ export default {
   layout: DashboardLayout,
   components: {
     Module,
+    StudentVerifications,
   },
   methods: {
     backToStudents() {

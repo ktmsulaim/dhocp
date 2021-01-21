@@ -25,4 +25,5 @@ Route::prefix('admin')->middleware('auth:api-admin')->group(function () {
     });
 
     Route::get('/verifications', [VerificationsController::class, 'allVerificationsApi'])->name('api.verifications.index');
+    Route::get('/users/{user}/verifications', [VerificationsController::class, 'getByStudentApi'])->name('api.verifications.byStudent');
 });
