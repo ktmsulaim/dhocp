@@ -25,6 +25,13 @@
             path: '/modules',
           }"
         />
+        <sidebar-item
+          :link="{
+            name: 'Progress',
+            icon: 'ni ni-chart-bar-32 text-blue',
+            path: '/progress',
+          }"
+        />
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">

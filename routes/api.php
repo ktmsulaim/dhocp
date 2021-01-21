@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VerificationsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,6 @@ Route::prefix('admin')->middleware('auth:api-admin')->group(function () {
     Route::get('/user', function () {
         return auth()->user();
     });
+
+    Route::get('/verifications', [VerificationsController::class, 'allVerificationsApi'])->name('api.verifications.index');
 });

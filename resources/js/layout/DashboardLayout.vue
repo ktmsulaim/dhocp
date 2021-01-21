@@ -40,6 +40,20 @@
             path: '/admin/modules',
           }"
         />
+        <sidebar-item
+          :link="{
+            name: 'Verifications',
+            icon: 'ni ni-check-bold text-red',
+            path: '/admin/verifications',
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'Announcement',
+            icon: 'ni ni-notification-70 text-blue',
+            path: '/admin/announcement',
+          }"
+        />
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">

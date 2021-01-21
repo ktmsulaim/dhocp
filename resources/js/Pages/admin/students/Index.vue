@@ -30,7 +30,7 @@
               </div>
               <div class="row align-items-center mt-3">
                 <div class="col d-flex justify-content-between">
-                  <div>
+                  <div class="d-flex align-items-center">
                     <base-button
                       @click="$inertia.get($route('export.students.index'))"
                       type="info"
@@ -58,6 +58,7 @@
                         >All students</inertia-link
                       >
                     </base-dropdown>
+                    <verification :selected="selectedStudents" />
                   </div>
                   <base-input
                     placeholder="Search students"
@@ -74,6 +75,13 @@
               :data="resultQuery"
             >
               <template slot="columns">
+                <th>
+                  <input
+                    v-model="selectAll"
+                    type="checkbox"
+                    class="custom-control-alternative"
+                  />
+                </th>
                 <th>#</th>
                 <th>Name</th>
                 <th>Enroll.No</th>
@@ -84,6 +92,15 @@
               </template>
 
               <template slot-scope="{ row }">
+                <td>
+                  <input
+                    v-model="selectedStudents"
+                    :value="row.id"
+                    :id="row.id"
+                    type="checkbox"
+                    class="custom-control-alternative"
+                  />
+                </td>
                 <td>{{ row.id }}</td>
                 <td class="budget">
                   <inertia-link
@@ -193,9 +210,14 @@
 
 <script>
 import DashboardLayout from "../../../layout/DashboardLayout";
+import Verification from "./Verification";
+
 export default {
   layout: DashboardLayout,
   props: ["students", "batches", "link"],
+  components: {
+    Verification,
+  },
   data() {
     return {
       modals: {
@@ -212,6 +234,7 @@ export default {
         loading: false,
       },
       search: null,
+      selectedStudents: [],
     };
   },
   methods: {
@@ -284,6 +307,23 @@ export default {
     },
     selectedBatch() {
       return this.getQueryVariable("batch");
+    },
+    selectAll: {
+      get() {
+        return this.resultQuery
+          ? this.selectedStudents.length == this.resultQuery.length
+          : false;
+      },
+      set(value) {
+        var selected = [];
+
+        if (value) {
+          this.resultQuery.forEach((user) => {
+            selected.push(user.id);
+          });
+        }
+        this.selectedStudents = selected;
+      },
     },
   },
   created() {

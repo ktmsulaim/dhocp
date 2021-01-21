@@ -194,4 +194,16 @@ class User extends Authenticatable
             'modules' => 0,
         ];
     }
+
+    public function verifications()
+    {
+        return $this->belongsToMany(Verification::class, 'user_verifications')
+            ->using(UserVerification::class)
+            ->withPivot(['id', 'status', 'remarks', 'created_at', 'updated_at']);
+    }
+
+    public function hasVerification($verification_id)
+    {
+        return $this->verifications()->where('user_verifications.verification_id', $verification_id)->exists();
+    }
 }

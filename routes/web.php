@@ -11,6 +11,8 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentExportController;
 use App\Http\Controllers\StudentsImportController;
 use App\Http\Controllers\UserModuleController;
+use App\Http\Controllers\UserVerificationController;
+use App\Http\Controllers\VerificationsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,6 +37,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/modules/items/delete/{itemGroup}', [UserModuleController::class, 'deleteItemRecord'])->name('user.modules.deleteRecord');
         Route::post('/modules/items/fileupload', [UserModuleController::class, 'uploadFile'])->name('user.fileupload');
         Route::post('/modules/items/deleteUpload', [UserModuleController::class, 'deleteFile'])->name('user.deleteUpload');
+
+        Route::get('/progress', [UserVerificationController::class, 'index'])->name('user.progress');
     });
 
     Route::get('/suspended', [AuthController::class, 'suspended'])->name('user.suspended');
@@ -52,6 +56,12 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('batches', BatchController::class, ['except' => ['destroy']]);
         Route::post('/batches/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
+
+        Route::resource('verifications', VerificationsController::class, ['except' => ['destroy']]);
+        Route::post('/verifications/updateOrder', [VerificationsController::class, 'updateOrder'])->name('verifications.updateOrder');
+        Route::post('/verifications/{verification}', [VerificationsController::class, 'destroy'])->name('verifications.destroy');
+        Route::post('/verifications/{verification}/approve', [VerificationsController::class, 'approve'])->name('verifications.approve');
+        Route::post('/verifications/{verification}/disapprove', [VerificationsController::class, 'disapprove'])->name('verifications.disapprove');
 
 
         Route::get('/students', [StudentController::class, 'index'])->name('students.index');
