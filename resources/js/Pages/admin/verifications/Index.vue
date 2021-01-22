@@ -30,7 +30,7 @@
               </div>
             </div>
             <table
-              v-if="verifications && verifications.length > 0"
+              v-if="ordered && ordered.length > 0"
               class="table tablesorter align-items-center table-flush"
             >
               <thead class="thead-light">
@@ -286,7 +286,7 @@ export default {
         this.editVerification.status = true;
         this.modals.form = true;
 
-        const verification = this.verifications.find(
+        const verification = this.ordered.find(
           (verification) => verification.id == id
         );
 
@@ -369,7 +369,7 @@ export default {
     this.$store.dispatch("assignTitle", "Verifications");
 
     if (this.verifications) {
-      this.ordered = this.verifications;
+      this.ordered = this.verifications.data;
     }
   },
   watch: {
@@ -390,7 +390,7 @@ export default {
     },
     verifications: {
       handler(value) {
-        this.ordered = value;
+        this.ordered = value.data;
       },
     },
   },

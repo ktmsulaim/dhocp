@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAppController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
@@ -65,6 +66,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/students/{id}/verifications/{verification}/approve', [VerificationsController::class, 'studentApprove'])->name('student.verifications.approve');
         Route::post('/students/{id}/verifications/{verification}/disapprove', [VerificationsController::class, 'studentDisapprove'])->name('student.verifications.disapprove');
         Route::post('/students/{id}/verifications/{verification}/updateRemarks', [VerificationsController::class, 'updateRemarks'])->name('student.verifications.updateRemarks');
+
+        Route::resource('announcements', AnnouncementController::class, ['except' => ['destroy']]);
+        Route::post('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 
 
         Route::get('/students', [StudentController::class, 'index'])->name('students.index');

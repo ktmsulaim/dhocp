@@ -206,4 +206,11 @@ class User extends Authenticatable
     {
         return $this->verifications()->where('user_verifications.verification_id', $verification_id)->exists();
     }
+
+    public function announcements()
+    {
+        return $this->belongsToMany(Announcement::class, 'announcement_users')
+            ->using(AnnouncementUser::class)
+            ->withPivot(['id', 'user_id', 'announcement_id', 'read_at']);
+    }
 }

@@ -51,7 +51,7 @@
           :link="{
             name: 'Announcement',
             icon: 'ni ni-notification-70 text-blue',
-            path: '/admin/announcement',
+            path: '/admin/announcements',
           }"
         />
       </template>

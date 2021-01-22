@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserVerification as ResourcesUserVerification;
+use App\Http\Resources\Verification as ResourcesVerification;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Models\Verification;
@@ -21,7 +22,7 @@ class VerificationsController extends Controller
     {
         $verifications = Verification::all();
         return Inertia::render('admin/verifications/Index', [
-            'verifications' => $verifications,
+            'verifications' => ResourcesVerification::collection($verifications),
         ]);
     }
 
