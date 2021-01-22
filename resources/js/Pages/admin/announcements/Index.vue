@@ -30,7 +30,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div v-if="announcements.data && announcements.data.length > 0">
+              <div v-if="items && items.length > 0">
                 <div class="table-responsive">
                   <table class="table border">
                     <thead>
@@ -38,32 +38,111 @@
                         <th>#</th>
                         <th>Title</th>
                         <th>Status</th>
+                        <th>Viewed</th>
                         <th>Date</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(ann, i) in announcements.data" :key="ann.id">
+                      <tr v-for="(ann, i) in items" :key="ann.id">
                         <td>{{ i + 1 }}</td>
                         <td>{{ ann.title }}</td>
                         <td>
-                          <badge v-if="ann.status == 1" type="success"
-                            >Published</badge
-                          >
-                          <badge v-else type="danger">Draft</badge>
+                          <badge v-if="ann.status == 1" type="success">
+                            <span class="hover" @click="updateStatus(ann.id)"
+                              >Published</span
+                            >
+                          </badge>
+                          <badge v-else type="danger">
+                            <span class="hover" @click="updateStatus(ann.id)"
+                              >Draft</span
+                            >
+                          </badge>
+                        </td>
+                        <td>
+                          {{ ann.viewed.count }} / {{ ann.viewed.delivered }}
                         </td>
                         <td>{{ ann.created_at }}</td>
                         <td>
-                          <base-button type="info" size="sm">
+                          <base-button
+                            @click="
+                              $inertia.get(
+                                $route('announcements.show', {
+                                  announcement: ann.id,
+                                })
+                              )
+                            "
+                            type="info"
+                            size="sm"
+                          >
                             <b-icon icon="eye-fill"></b-icon>
                           </base-button>
-                          <base-button type="primary" size="sm">
+                          <base-button
+                            @click="
+                              $inertia.get(
+                                $route('announcements.edit', {
+                                  announcement: ann.id,
+                                })
+                              )
+                            "
+                            type="primary"
+                            size="sm"
+                          >
                             <b-icon icon="pencil-square"></b-icon>
+                          </base-button>
+                          <base-button
+                            @click="showDeleteModal(ann.id)"
+                            type="danger"
+                            size="sm"
+                          >
+                            <b-icon icon="dash-circle"></b-icon>
                           </base-button>
                         </td>
                       </tr>
                     </tbody>
                   </table>
+
+                  <modal
+                    :show.sync="del.modal"
+                    gradient="danger"
+                    modal-classes="modal-danger modal-dialog-centered"
+                  >
+                    <h6
+                      slot="header"
+                      class="modal-title"
+                      id="modal-title-notification"
+                    >
+                      Your attention is required
+                    </h6>
+
+                    <div class="py-3 text-center">
+                      <i class="ni ni-bell-55 ni-3x"></i>
+                      <h4 class="heading mt-4">Are you sure?!</h4>
+                      <p>
+                        This action will delete the announcement. Remember this
+                        action can't be undone!
+                      </p>
+                    </div>
+
+                    <template slot="footer">
+                      <base-button
+                        @click="destroy"
+                        :loading="del.loading"
+                        :disabled="del.loading"
+                        loaderColor="#000000"
+                        type="white"
+                        >Ok, Got it</base-button
+                      >
+                      <base-button
+                        type="link"
+                        text-color="white"
+                        class="ml-auto"
+                        @click="closeDeleteModal"
+                      >
+                        Close
+                      </base-button>
+                    </template>
+                  </modal>
                 </div>
               </div>
               <div v-else>
@@ -91,9 +170,71 @@ export default {
         message: null,
         head: "Info",
       },
+      del: {
+        modal: false,
+        id: null,
+        loading: false,
+      },
     };
   },
-  methods: {},
+  computed: {
+    items() {
+      return this.announcements.data;
+    },
+  },
+  methods: {
+    showDeleteModal(id) {
+      if (id) {
+        this.del.id = id;
+        this.del.modal = true;
+      }
+    },
+    closeDeleteModal() {
+      this.del.id = null;
+      this.del.loading = false;
+      this.del.modal = false;
+    },
+    destroy() {
+      if (this.del.id) {
+        this.del.loading = true;
+        axios
+          .delete(
+            this.$route("announcements.destroy", { announcement: this.del.id })
+          )
+          .then((resp) => {})
+          .catch((err) => console.error("Unable to delete the announcement!"))
+          .finally(() => {
+            const id = this.del.id;
+            const ann = this.items.find((item) => item.id == id);
+            this.items.splice(this.items.indexOf(ann), 1);
+
+            this.del.id = null;
+            this.del.loading = false;
+            this.del.modal = false;
+          });
+      }
+    },
+    updateStatus(id) {
+      if (id) {
+        const ann = this.items.find((item) => item.id == id);
+        const status = ann.status == 1 ? 0 : 1;
+        axios
+          .post(
+            this.$route("announcements.updateStatus", { announcement: id }),
+            {
+              status,
+            }
+          )
+          .then((resp) => {
+            const newData = resp.data;
+            this.items.splice(this.items.indexOf(ann), 1, newData);
+          })
+          .catch((err) => {
+            console.error("Unable to update the status!");
+          });
+      }
+    },
+  },
   created() {
     this.$store.dispatch("assignTitle", "Announcements");
   },
@@ -101,4 +242,7 @@ export default {
 </script>
 
 <style scoped>
+.hover {
+  cursor: pointer;
+}
 </style>>

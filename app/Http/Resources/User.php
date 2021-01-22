@@ -24,6 +24,7 @@ class User extends JsonResource
             'active' => $this->active,
             'batch_name' => $this->batch->name,
             'batch' => $this->batch,
+            'profile' => $this->profile(),
         ];
     }
 }

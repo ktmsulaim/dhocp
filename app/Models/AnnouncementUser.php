@@ -10,4 +10,18 @@ class AnnouncementUser extends Pivot
     use HasFactory;
 
     protected $table = 'announcement_users';
+
+    protected $dates = ['read_at', 'updated_at', 'created_at'];
+
+    // protected $dateFormat = 'd-m-Y g:i A';
+
+    public function announcement()
+    {
+        return $this->belongsTo(Announcement::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

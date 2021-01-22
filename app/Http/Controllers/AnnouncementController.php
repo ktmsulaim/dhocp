@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Announcement as ResourcesAnnouncement;
+use App\Http\Resources\AnnouncementUser as ResourcesAnnouncementUser;
 use App\Models\Announcement;
+use App\Models\AnnouncementUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -48,7 +51,13 @@ class AnnouncementController extends Controller
             'status' => 'required'
         ]);
 
-        Announcement::create($request->all());
+        $announcement = Announcement::create($request->all());
+
+        $students = User::active()->get();
+
+        $students->each(function ($std) use ($announcement) {
+            $std->announcements()->attach($announcement);
+        });
 
         return Redirect::route('announcements.index');
     }
@@ -108,6 +117,27 @@ class AnnouncementController extends Controller
     public function destroy(Announcement $announcement)
     {
         $announcement->delete();
-        return Redirect::route('announcements.index');
+        // return Redirect::route('announcements.index');
+    }
+
+
+    public function updateStatus(Request $request, Announcement $announcement)
+    {
+        $status = $request->status;
+
+        if ($status == 1 || $status == 0) {
+            $announcement->status = $status;
+            $announcement->save();
+
+            return response(new ResourcesAnnouncement($announcement), 200);
+        }
+
+        return response([], 404);
+    }
+
+    public function readBy(Announcement $announcement)
+    {
+        $au = AnnouncementUser::where(['announcement_id' => $announcement->id])->whereNotNull('read_at')->get();
+        return ResourcesAnnouncementUser::collection($au);
     }
 }

@@ -83,6 +83,7 @@
                   />
                 </th>
                 <th>#</th>
+                <th></th>
                 <th>Name</th>
                 <th>Enroll.No</th>
                 <th>DOB</th>
@@ -102,6 +103,14 @@
                   />
                 </td>
                 <td>{{ row.id }}</td>
+                <td>
+                  <img
+                    :src="row.profile"
+                    width="50"
+                    height="50"
+                    :alt="row.name"
+                  />
+                </td>
                 <td class="budget">
                   <inertia-link
                     :href="$route('students.show', { id: row.id })"

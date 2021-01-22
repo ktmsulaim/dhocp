@@ -15,6 +15,7 @@ import VueFileAgentStyles from 'vue-file-agent/dist/vue-file-agent.css';
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
 import LightTimeline from 'vue-light-timeline';
+ 
 
 
 
@@ -27,6 +28,7 @@ Vue.use(flatPickr);
 Vue.use(VueFileAgent);
 Vue.use(Viewer);
 Vue.use(LightTimeline);
+Vue.use(require('vue-moment'));
 
 
 

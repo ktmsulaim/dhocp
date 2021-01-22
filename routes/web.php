@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAppController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AnnouncementUserController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
@@ -40,6 +41,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/modules/items/deleteUpload', [UserModuleController::class, 'deleteFile'])->name('user.deleteUpload');
 
         Route::get('/progress', [UserVerificationController::class, 'index'])->name('user.progress');
+
+        Route::get('/inbox/{id}', [AnnouncementUserController::class, 'show'])->name('user.inbox.show');
+        Route::get('/inbox', [AnnouncementUserController::class, 'index'])->name('user.inbox');
     });
 
     Route::get('/suspended', [AuthController::class, 'suspended'])->name('user.suspended');
@@ -67,8 +71,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/students/{id}/verifications/{verification}/disapprove', [VerificationsController::class, 'studentDisapprove'])->name('student.verifications.disapprove');
         Route::post('/students/{id}/verifications/{verification}/updateRemarks', [VerificationsController::class, 'updateRemarks'])->name('student.verifications.updateRemarks');
 
-        Route::resource('announcements', AnnouncementController::class, ['except' => ['destroy']]);
-        Route::post('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+        Route::get('/announcements/{announcement}/readBy', [AnnouncementController::class, 'readBy'])->name('announcements.readBy');
+        Route::post('/announcements/{announcement}/updateStatus', [AnnouncementController::class, 'updateStatus'])->name('announcements.updateStatus');
+        Route::resource('announcements', AnnouncementController::class);
 
 
         Route::get('/students', [StudentController::class, 'index'])->name('students.index');

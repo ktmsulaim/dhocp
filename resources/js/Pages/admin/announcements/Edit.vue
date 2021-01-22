@@ -9,17 +9,50 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">Announcements</h3>
+                  <h3 class="mb-0">Edit announcement</h3>
                 </div>
                 <div class="col text-right">
                   <base-button
-                    @click="$inertia.get($route('announcements.create'))"
+                    @click="$inertia.get($route('announcements.index'))"
                     type="primary"
-                    icon="ni ni-fat-add"
-                    >Add new</base-button
+                    >Back to Announcements</base-button
                   >
                 </div>
               </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-control-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control form-control-alternative"
+                  v-model="form.title"
+                />
+                <p class="text-danger mt-3" v-if="form.errors.title">
+                  {{ form.errors.title }}
+                </p>
+              </div>
+              <div class="form-group">
+                <label class="form-control-label">Body</label>
+                <textarea
+                  class="form-control form-control-alternative"
+                  cols="30"
+                  rows="10"
+                  v-model="form.body"
+                ></textarea>
+                <p class="text-danger mt-3" v-if="form.errors.body">
+                  {{ form.errors.body }}
+                </p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <base-button
+                type="primary"
+                :loading="form.processing"
+                :disabled="form.processing"
+                @click="submit"
+                >Submit</base-button
+              >
             </div>
           </div>
         </div>
@@ -29,10 +62,36 @@
 </template>
 
 <script>
+import DashboardLayout from "../../../layout/DashboardLayout";
+
 export default {
+  layout: DashboardLayout,
   props: ["announcement"],
+  data() {
+    return {
+      form: this.$inertia.form({
+        title: null,
+        body: null,
+        status: 1,
+      }),
+    };
+  },
+  methods: {
+    submit() {
+      this.form.patch(
+        this.$route("announcements.update", {
+          announcement: this.announcement.id,
+        })
+      );
+    },
+  },
   created() {
-    this.$store.dispatch("assignTitle", "Edit " + this.announcement.name);
+    this.$store.dispatch("assignTitle", "Edit announcement");
+
+    if (this.announcement) {
+      this.form.title = this.announcement.title;
+      this.form.body = this.announcement.body;
+    }
   },
 };
 </script>

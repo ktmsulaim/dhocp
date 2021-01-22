@@ -213,4 +213,18 @@ class User extends Authenticatable
             ->using(AnnouncementUser::class)
             ->withPivot(['id', 'user_id', 'announcement_id', 'read_at']);
     }
+
+    public function profile()
+    {
+        if ($this->image) {
+            $img = 'uploads' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR . $this->image;
+            if (file_exists(public_path($img))) {
+                return asset($img);
+            } else {
+                return asset('img/user.png');
+            }
+        } else {
+            return asset('img/user.png');
+        }
+    }
 }

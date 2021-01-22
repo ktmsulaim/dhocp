@@ -32,6 +32,13 @@
             path: '/progress',
           }"
         />
+        <sidebar-item
+          :link="{
+            name: 'Inbox',
+            icon: 'ni ni-email-83 text-green',
+            path: '/inbox',
+          }"
+        />
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">
