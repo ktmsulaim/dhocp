@@ -32,7 +32,7 @@
 
             <div class="container my-3">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <base-input
                     alternative
                     placeholder="Enter title here"
@@ -42,6 +42,18 @@
                   </base-input>
                   <p v-if="form.errors.label" class="small text-danger">
                     {{ form.errors.label }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <base-input
+                    alternative
+                    placeholder="Enter unique key here"
+                    label="Key"
+                    v-model="form.key"
+                  >
+                  </base-input>
+                  <p v-if="form.errors.key" class="small text-danger">
+                    {{ form.errors.key }}
                   </p>
                 </div>
               </div>
@@ -202,18 +214,9 @@ export default {
         return false;
       }
     },
-    slug(str) {
-      if (str) {
-        return str.toLowerCase().split(" ").join("-");
-      }
-    },
     submit() {
       this.form
         .transform((data) => {
-          if (data.label) {
-            data.key = this.slug(data.label);
-          }
-
           if (this.options && this.options.length > 0) {
             data.additional = this.options;
           }

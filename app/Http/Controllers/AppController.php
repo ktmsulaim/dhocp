@@ -47,6 +47,7 @@ class AppController extends Controller
         return Inertia::render('user/Index', [
             'user' => $user,
             'modules' => $data,
+            'isQualified' => $user->isQualified(),
             'invalidAlert' => $user->invalidAlert(),
         ]);
     }

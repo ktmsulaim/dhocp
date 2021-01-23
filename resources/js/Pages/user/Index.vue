@@ -12,7 +12,13 @@
               <h3>Hello, {{ user.name }}</h3>
             </div>
             <div class="card-body">
-              <div v-if="invalidAlert.items > 0" class="mb-3">
+              <div v-if="isQualified" class="mb-3">
+                <base-alert type="success">
+                  <strong>Congrats</strong> Your application has been accepted.
+                  Please print the form for the further procedures!
+                </base-alert>
+              </div>
+              <div v-else-if="invalidAlert.items > 0" class="mb-3">
                 <base-alert type="danger">
                   <strong>Alert!</strong> You have
                   {{ invalidAlert.items }} invalid
@@ -189,7 +195,7 @@ import DashboardLayout from "../../layout/users/DashboardLayout";
 
 export default {
   layout: DashboardLayout,
-  props: ["user", "modules", "invalidAlert"],
+  props: ["user", "modules", "invalidAlert", "isQualified"],
   created() {
     this.$store.dispatch("assignTitle", "Dashboard");
   },

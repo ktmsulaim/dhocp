@@ -71,7 +71,11 @@
           <p>No options!</p>
         </div>
       </div>
-      <base-input alternative v-else-if="item.type == 'date'">
+      <base-input
+        :label="item.label"
+        alternative
+        v-else-if="item.type == 'date'"
+      >
         <flat-pickr
           :placeholder="item.placeholder"
           slot-scope="{ focus, blur }"

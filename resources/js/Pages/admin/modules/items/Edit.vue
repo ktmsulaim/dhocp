@@ -32,13 +32,29 @@
 
             <div class="container my-3">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <base-input
                     alternative
                     placeholder="Enter title here"
                     label="Label"
                     v-model="form.label"
-                  ></base-input>
+                  >
+                  </base-input>
+                  <p v-if="form.errors.label" class="small text-danger">
+                    {{ form.errors.label }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <base-input
+                    alternative
+                    placeholder="Enter unique key here"
+                    label="Key"
+                    v-model="form.key"
+                  >
+                  </base-input>
+                  <p v-if="form.errors.key" class="small text-danger">
+                    {{ form.errors.key }}
+                  </p>
                 </div>
               </div>
 
@@ -155,7 +171,7 @@ export default {
     return {
       form: this.$inertia.form({
         module_id: this.item.module_id,
-        key: null,
+        key: this.item.key,
         label: this.item.label,
         description: this.item.description,
         required: this.item.required,

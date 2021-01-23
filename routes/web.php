@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PrintFormController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentExportController;
 use App\Http\Controllers\StudentsImportController;
@@ -28,6 +29,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('user.active')->group(function () {
         Route::get('/', [AppController::class, 'index'])->name('user.index');
+
+        Route::get('/print', [PrintFormController::class, 'printUser'])->name('user.print');
 
         Route::get('/profile', [AppController::class, 'profile'])->name('user.profile');
         Route::post('/profile/udpate', [AppController::class, 'updateProfile'])->name('user.profile.update');

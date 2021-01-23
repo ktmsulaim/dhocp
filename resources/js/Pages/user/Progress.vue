@@ -9,7 +9,21 @@
         <div class="col">
           <div class="card shadow border-0">
             <div class="card-header">
-              <h3>Progress</h3>
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3>Progress</h3>
+                </div>
+                <div v-if="isQualified" class="col text-right">
+                  <base-button
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="download"
+                  >
+                    <b-icon icon="printer"></b-icon>
+                    <span class="mx-2">Print</span>
+                  </base-button>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <div v-if="verifications && verifications.length > 0">
@@ -56,13 +70,14 @@ import DashboardLayout from "../../layout/users/DashboardLayout";
 import VerificationRemarks from "../../components/VerificationRemarks";
 export default {
   layout: DashboardLayout,
-  props: ["verifications", "status"],
+  props: ["verifications", "status", "isQualified"],
   components: {
     VerificationRemarks,
   },
   data() {
     return {
       show: true,
+      loading: false,
     };
   },
   computed: {
@@ -87,6 +102,9 @@ export default {
       if (id) {
         return this.status.data.find((veri) => veri.verification_id == id);
       }
+    },
+    download() {
+      window.location.href = this.$route("user.print");
     },
   },
 };

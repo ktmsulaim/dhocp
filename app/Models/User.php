@@ -271,4 +271,36 @@ class User extends Authenticatable
             unlink($dir . $this->image);
         }
     }
+
+    public function getItem($item_id)
+    {
+        $itemUser = ItemUser::where(['user_id' => $this->id, 'item_id' => $item_id])->first();
+
+        if ($itemUser) {
+            return $itemUser->getValue();
+        }
+    }
+
+    public function getItemByKey($key)
+    {
+        if ($key) {
+            $item = Item::where('key', $key)->first();
+
+            if ($item) {
+                return $this->getItem($item->id);
+            }
+        }
+    }
+
+    public function isQualified()
+    {
+        // s
+        $final = $this->verifications()->where('name', 'Final Verification')->first();
+
+        if ($final && $final->pivot->status === 1) {
+            return true;
+        }
+
+        return false;
+    }
 }

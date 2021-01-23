@@ -47,7 +47,7 @@ class ItemController extends Controller
     {
         $request->validate([
             'module_id' => 'required|integer',
-            'key' => '',
+            'key' => 'required',
             'label' => 'required',
             'description' => 'required',
             'required' => 'required|integer',
@@ -60,7 +60,7 @@ class ItemController extends Controller
 
         $item = new Item();
         $item->module_id = $request->module_id;
-        $item->key = Str::slug($request->label);
+        $item->key = $request->get('key') ? $request->get('key') : Str::slug($request->label);
         $item->label = $request->label;
         $item->description = $request->description;
         $item->required = $request->required;
@@ -110,7 +110,7 @@ class ItemController extends Controller
     {
         $request->validate([
             'module_id' => 'required|integer',
-            'key' => '',
+            'key' => 'required',
             'label' => 'required',
             'description' => 'required',
             'required' => 'required|integer',
@@ -128,7 +128,7 @@ class ItemController extends Controller
             $item->additional = json_encode($request->additional, JSON_FORCE_OBJECT);
         }
 
-        $item->key = Str::slug($request->label);
+        $item->key = $request->get('key') ? $request->get('key') : Str::slug($request->label);
         $item->label = $request->label;
         $item->description = $request->description;
         $item->required = $request->required;
