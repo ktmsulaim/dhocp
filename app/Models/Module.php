@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Module extends Model
 {
@@ -65,8 +66,8 @@ class Module extends Model
             foreach ($items as $key => $item) {
                 if ($item->item->type == 'file' && !empty($item->value_info)) {
                     $file_info = json_decode($item->value_info, true);
-                    $file = public_path('uploads' . DIRECTORY_SEPARATOR . $file_info['name']);
-                    if (file_exists($file)) {
+                    $file = 'uploads' . DIRECTORY_SEPARATOR . $file_info['name'];
+                    if (Storage::exists($file)) {
                         array_push($files, $file);
                     }
                 }
@@ -86,9 +87,9 @@ class Module extends Model
                 foreach ($items as $key => $item) {
                     if ($item->item->type == 'file' && !empty($item->value_info)) {
                         $file_info = json_decode($item->value_info, true);
-                        $file = public_path('uploads' . DIRECTORY_SEPARATOR . $file_info['name']);
-                        if (file_exists($file)) {
-                            array_push($files, ['file' => $file, 'newName' => $item->item->label . '.' . $file_info['ext']]);
+                        $file = 'uploads' . DIRECTORY_SEPARATOR . $file_info['name'];
+                        if (Storage::exists($file)) {
+                            array_push($files, ['file' => public_path('storage' . DIRECTORY_SEPARATOR . $file), 'newName' => $item->item->label . '.' . $file_info['ext']]);
                         }
                     }
                 }

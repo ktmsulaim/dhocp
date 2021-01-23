@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Madnest\Madzipper\Madzipper;
 
@@ -199,7 +200,7 @@ class ModuleController extends Controller
 
         if ($files) {
             $zipper = new Madzipper;
-            $zipper->make(public_path('archived' . DIRECTORY_SEPARATOR . $filename));
+            $zipper->make(public_path('storage' . DIRECTORY_SEPARATOR . 'archived' . DIRECTORY_SEPARATOR . $filename));
 
             foreach ($files as $key => $file) {
                 $zipper->add($file['file'], $file['newName']);
@@ -207,7 +208,7 @@ class ModuleController extends Controller
 
             $zipper->close();
 
-            return response()->download(public_path('archived' . DIRECTORY_SEPARATOR . $filename), $filename, ['Content-type:application/zip', $filename]);
+            return response()->download(public_path('storage' . DIRECTORY_SEPARATOR . 'archived' . DIRECTORY_SEPARATOR . $filename), $filename, ['Content-type:application/zip', $filename]);
         }
     }
 }

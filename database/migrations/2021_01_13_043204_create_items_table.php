@@ -22,7 +22,7 @@ class CreateItemsTable extends Migration
             $table->tinyInteger('required')->default(1);
             $table->string('type'); // [number, text, textarea, dropdown, date, file, checkbox]
             $table->string('placeholder')->nullable();
-            $table->json('additional')->nullable();
+            $table->text('additional')->nullable();
             $table->string('size')->nullable(); // [1 => Full, 2 => Half, 3 => One third, 4 => Quarter]
             $table->integer('order')->nullable();
             $table->timestamps();

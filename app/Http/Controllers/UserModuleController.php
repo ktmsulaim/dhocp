@@ -185,18 +185,21 @@ class UserModuleController extends Controller
 
         $filename = time() . '.' . $request->ext;
 
-        $file->move(public_path('uploads'), $filename);
+        // $file->move(public_path('uploads'), $filename);
+
+        Storage::putFileAs('uploads', $file, $filename);
 
         $itemUser = ItemUser::where(['user_id' => $user->id, 'item_id' => $item->id])->first();
-        $itemUser->value = asset('uploads/' . $filename);
+        $itemUser->value = asset('storage/uploads/' . $filename);
         $itemUser->value_info = json_encode([
             'name' => $filename,
             'size' => $size,
             'sizeText' => $request->size,
             'type' => $file->getClientMimeType(),
             'ext' => $request->ext,
-            'url' => asset('uploads/' . $filename)
+            'url' => asset('storage/uploads/' . $filename)
         ], JSON_FORCE_OBJECT);
+
         $itemUser->save();
     }
 
@@ -206,10 +209,12 @@ class UserModuleController extends Controller
             $itemUser = ItemUser::find($request->item_user_id);
             $file = json_decode($itemUser->value_info, true);
 
-            $filename = public_path('uploads') . DIRECTORY_SEPARATOR . $file['name'];
+            $filename = 'uploads' . DIRECTORY_SEPARATOR . $file['name'];
 
-            if (file_exists($filename)) {
-                unlink($filename);
+            if (Storage::exists($filename)) {
+
+                Storage::delete($filename);
+
                 $itemUser->value = null;
                 $itemUser->value_info = null;
                 $itemUser->save();

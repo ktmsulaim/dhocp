@@ -7,6 +7,7 @@ use App\Models\Module;
 use App\Models\User as ModelsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AppController extends Controller
@@ -84,9 +85,9 @@ class AppController extends Controller
         }
 
         // Check already has a photo before
-        $old = public_path('uploads' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR . $user->image);
+        $old = 'uploads' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR . $user->image;
 
-        if ($user->image && file_exists($old)) {
+        if ($user->image && Storage::exists($old)) {
             $user->deleteProfile();
         }
 

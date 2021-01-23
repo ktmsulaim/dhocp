@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -219,8 +220,8 @@ class User extends Authenticatable
     {
         if ($this->image) {
             $img = 'uploads' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR . $this->image;
-            if (file_exists(public_path($img))) {
-                return asset($img);
+            if (Storage::exists($img)) {
+                return asset('storage' . DIRECTORY_SEPARATOR . $img);
             } else {
                 return asset('img/user.png');
             }
@@ -247,14 +248,14 @@ class User extends Authenticatable
         $imageName = time() . '.' . $extension;
 
         if (!File::exists(public_path('uploads' . $ds . 'profile'))) {
-            File::makeDirectory(public_path('uploads' . $ds . 'profile'), 0777, true, true);
+            Storage::makeDirectory(public_path('uploads' . $ds . 'profile'), 0777, true, true);
         }
 
         if (!$dir) {
-            $dir = public_path() . $ds . 'uploads' . $ds . 'profile' . $ds;
+            $dir = 'uploads' . $ds . 'profile' . $ds;
         }
 
-        file_put_contents($dir . $imageName, base64_decode($image));
+        Storage::put($dir . $imageName, base64_decode($image));
 
         return $imageName;
     }
@@ -264,11 +265,11 @@ class User extends Authenticatable
         $ds = DIRECTORY_SEPARATOR;
 
         if (empty($dir)) {
-            $dir = public_path() . $ds . 'uploads' . $ds . 'profile' . $ds;
+            $dir = 'uploads' . $ds . 'profile' . $ds;
         }
 
-        if (file_exists($dir . $this->image)) {
-            unlink($dir . $this->image);
+        if (Storage::exists($dir . $this->image)) {
+            Storage::delete($dir . $this->image);
         }
     }
 
