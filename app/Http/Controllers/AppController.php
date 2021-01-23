@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\User;
 use App\Models\Module;
+use App\Models\User as ModelsUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class AppController extends Controller
@@ -69,5 +71,26 @@ class AppController extends Controller
         return Inertia::render('user/Profile', [
             'user' => $user,
         ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $photo = $request->photo;
+        $user = ModelsUser::find(Auth::id());
+
+        if (!$photo) {
+            return response(['message' => "No photo was uploaded!"], 404);
+        }
+
+        // Check already has a photo before
+        $old = public_path('uploads' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR . $user->image);
+
+        if ($user->image && file_exists($old)) {
+            $user->deleteProfile();
+        }
+
+        $new = $user->createFromBase64($photo);
+        $user->image = $new;
+        $user->save();
     }
 }

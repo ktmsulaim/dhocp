@@ -28,7 +28,9 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('user.active')->group(function () {
         Route::get('/', [AppController::class, 'index'])->name('user.index');
+
         Route::get('/profile', [AppController::class, 'profile'])->name('user.profile');
+        Route::post('/profile/udpate', [AppController::class, 'updateProfile'])->name('user.profile.update');
 
         Route::get('/modules', [UserModuleController::class, 'index'])->name('user.modules.index');
         Route::get('/modules/{module}', [UserModuleController::class, 'show'])->name('user.modules.show');

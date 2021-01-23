@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\File;
 
 class User extends Authenticatable
 {
@@ -225,6 +226,49 @@ class User extends Authenticatable
             }
         } else {
             return asset('img/user.png');
+        }
+    }
+
+    public function createFromBase64($filename, $dir = null)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $image_64 = $filename; //your base64 encoded data
+
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+
+        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+
+        // find substring fro replace here eg: data:image/png;base64,
+
+        $image = str_replace($replace, '', $image_64);
+
+        $image = str_replace(' ', '+', $image);
+
+        $imageName = time() . '.' . $extension;
+
+        if (!File::exists(public_path('uploads' . $ds . 'profile'))) {
+            File::makeDirectory(public_path('uploads' . $ds . 'profile'), 0777, true, true);
+        }
+
+        if (!$dir) {
+            $dir = public_path() . $ds . 'uploads' . $ds . 'profile' . $ds;
+        }
+
+        file_put_contents($dir . $imageName, base64_decode($image));
+
+        return $imageName;
+    }
+
+    public function deleteProfile($dir = null)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        if (empty($dir)) {
+            $dir = public_path() . $ds . 'uploads' . $ds . 'profile' . $ds;
+        }
+
+        if (file_exists($dir . $this->image)) {
+            unlink($dir . $this->image);
         }
     }
 }

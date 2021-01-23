@@ -30,7 +30,12 @@
             <div class="container">
               <div class="row my-3">
                 <div class="col col-md-4 text-center">
-                  <img src="/img/user.png" alt="User icon" class="img-fluid" />
+                  <img
+                    :src="student.data.profile"
+                    alt="User icon"
+                    height="180"
+                    style="max-width='100%'"
+                  />
                   <div class="mt-2">
                     <h4>{{ student.data.name }}</h4>
                   </div>
