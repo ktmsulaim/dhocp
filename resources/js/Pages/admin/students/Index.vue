@@ -59,6 +59,10 @@
                       >
                     </base-dropdown>
                     <verification :selected="selectedStudents" />
+                    <bulk-delete
+                      :selected="selectedStudents"
+                      @updateStudents="reloadStudents"
+                    />
                   </div>
                   <base-input
                     placeholder="Search students"
@@ -220,12 +224,14 @@
 <script>
 import DashboardLayout from "../../../layout/DashboardLayout";
 import Verification from "./Verification";
+import BulkDelete from "./BulkDelete";
 
 export default {
   layout: DashboardLayout,
   props: ["students", "batches", "link"],
   components: {
     Verification,
+    BulkDelete,
   },
   data() {
     return {
@@ -289,6 +295,10 @@ export default {
     addAStudent() {
       this.$inertia.get(this.$route("students.create"));
     },
+    reloadStudents() {
+      this.selectedStudents = [];
+      this.$inertia.reload();
+    },
   },
   computed: {
     pageTitle() {
@@ -308,7 +318,11 @@ export default {
           return this.search
             .toLowerCase()
             .split(" ")
-            .every((v) => item.name.toLowerCase().includes(v));
+            .every(
+              (v) =>
+                item.name.toLowerCase().includes(v) ||
+                item.enroll_no.includes(v)
+            );
         });
       } else {
         return this.students.data;

@@ -3,10 +3,10 @@
     <div>
       <span
         style="cursor: pointer"
-        data-toggle="tooltip"
-        title="Edit content"
+        v-b-tooltip.hover
+        title="Edit"
         @click="modals.form = !modals.form"
-        class="ni ni-caps-small"
+        ><b-icon icon="pencil-square"></b-icon
       ></span>
     </div>
     <!-- Modals -->

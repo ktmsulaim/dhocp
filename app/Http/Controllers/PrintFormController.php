@@ -73,7 +73,7 @@ class PrintFormController extends Controller
         }
 
         $convocation = $user->items()->where('key', 'convocation-donation')->first();
-        $updated = Carbon::parse($convocation->pivot->admin_updated)->format('d-m-Y');
+        $updated = optional($convocation->pivot->admin_updated)->format('d-m-Y');
         if ($updated) {
             $pdf->SetXY(101.3, 85);
             $pdf->Write(0, $updated);
@@ -159,9 +159,22 @@ class PrintFormController extends Controller
 
         $pdf->setFontSize(6);
 
-        $pdf->SetXY(176, 262.5);
+        // Applied on
+        $applied = $user->verifications()->where('name', 'Final Verification')->wherePivot('status', 1)->first();
+
+        if ($applied) {
+            $applied_date = Carbon::parse($applied->pivot->updated_at)->format('d-m-Y g:i A');
+
+            $pdf->SetXY(139.6, 262.5);
+            $pdf->Write(0, $applied_date);
+        }
+
+        // Downloaded on
+        $pdf->SetXY(174.2, 262.5);
         $pdf->Write(0, Carbon::now()->format('d-m-Y g:i A'));
 
+
         $pdf->Output("D", $user->enroll_no . '.pdf');
+        // $pdf->Output();
     }
 }

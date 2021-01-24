@@ -12,11 +12,8 @@
                   <h3 class="mb-0">View student</h3>
                 </div>
                 <div class="col text-right">
-                  <base-button
-                    icon="ni ni-caps-small"
-                    @click="edit"
-                    type="default"
-                    >Edit</base-button
+                  <base-button @click="edit" type="default"
+                    ><b-icon icon="pencil-square"></b-icon> Edit</base-button
                   >
                   <base-button
                     @click="backToStudents"

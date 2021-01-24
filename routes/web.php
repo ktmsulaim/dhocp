@@ -88,6 +88,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.update');
         Route::post('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+        Route::post('/students/delete/bulk', [StudentController::class, 'deleteBulk'])->name('students.delete.bulk');
 
         Route::get('/students/{id}/module/{module}', [StudentController::class, 'getModuleItems'])->name('admin.students.items');
         Route::post('/items/{id}/updateStatus', [ModuleController::class, 'updateStatus'])->name('students.items.udpateStatus');

@@ -166,6 +166,25 @@ class StudentController extends Controller
         return Redirect::back();
     }
 
+    public function deleteBulk(Request $request)
+    {
+        $ids = $request->ids;
+
+        if (!$ids) {
+            return response([], 404);
+        }
+
+        if (count($ids) > 0) {
+            foreach ($ids as $id) {
+                $student = User::find($id);
+
+                if ($student) {
+                    $student->delete();
+                }
+            }
+        }
+    }
+
 
     public function getModuleItems($student_id, $module_id)
     {

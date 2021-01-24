@@ -67,7 +67,7 @@
                 <div class="col-md-6 order-1 order-md-2">
                   <h4 class="mb-3">File example</h4>
                   <img
-                    src="/img/import_sample.jpg"
+                    src="/img/import_sample.JPG"
                     alt="Import sample"
                     class="img-fluid"
                   />

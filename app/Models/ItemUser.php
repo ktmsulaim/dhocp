@@ -11,6 +11,8 @@ class ItemUser extends Pivot
 
     protected $table = 'item_user';
 
+    protected $dates = ['admin_updated', 'created_at', 'updated_at'];
+
     public function item()
     {
         return $this->belongsTo(Item::class);

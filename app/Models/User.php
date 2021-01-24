@@ -63,7 +63,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Item::class)
             ->using(ItemUser::class)
-            ->withPivot(['id', 'value', 'value_info', 'is_valid', 'valid_message', 'created_at', 'updated_at']);
+            ->withPivot(['id', 'value', 'value_info', 'is_valid', 'valid_message', 'admin_updated', 'created_at', 'updated_at']);
     }
 
     public function itemGroups()
