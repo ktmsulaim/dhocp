@@ -37,7 +37,9 @@
                         <td>{{ i + 1 }}</td>
                         <td>{{ ann.title }}</td>
                         <td>
-                          {{ ann.created_at | moment("DD MMMM YYYY") }}
+                          {{
+                            ann.created_at | moment("DD MMMM YYYY, h:mm:ss a")
+                          }}
                         </td>
                       </tr>
                     </tbody>
@@ -61,6 +63,19 @@ export default {
   props: ["announcements"],
   created() {
     this.$store.dispatch("assignTitle", "Inbox");
+
+    const token = this.$page.props.auth_user.data.api_token;
+
+    if (token) {
+      axios
+        .get(`/api/getUnreadMessageCount?api_token=${token}`)
+        .then((resp) => {
+          this.$store.dispatch("fetchUnreadCount", resp.data);
+        })
+        .catch((err) => {
+          console.error("Unable to load unread messages!");
+        });
+    }
   },
 };
 </script>

@@ -10,8 +10,8 @@
       <li class="nav-item dropdown">
         <base-dropdown class="nav-link pr-0">
           <div class="media align-items-center" slot="title">
-            <span class="avatar avatar-sm rounded-circle">
-              <img alt="Image placeholder" src="/img/user.png" />
+            <span class="avatar avatar-sm rounded-circle overflow-hidden">
+              <img alt="Image placeholder" :src="user.profile" />
             </span>
             <div class="media-body ml-2 d-none d-lg-block">
               <span class="mb-0 text-sm font-weight-bold">{{ user.name }}</span>
@@ -69,7 +69,7 @@ export default {
     ...mapGetters(["pageTitle"]),
   },
   created() {
-    this.user = this.$page.props.user;
+    this.user = this.$page.props.auth_user.data;
   },
 };
 </script>

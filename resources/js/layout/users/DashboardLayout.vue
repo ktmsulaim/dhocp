@@ -38,6 +38,9 @@
             icon: 'ni ni-email-83 text-green',
             path: '/inbox',
           }"
+          :badge="{
+            count: unread,
+          }"
         />
       </template>
     </side-bar>
@@ -58,6 +61,7 @@
 import DashboardNavbar from "./DashboardNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import { FadeTransition } from "vue2-transitions";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -76,6 +80,26 @@ export default {
         this.$sidebar.displaySidebar(false);
       }
     },
+    getUnreadMessageCount() {
+      const token = this.$page.props.auth_user.data.api_token;
+
+      if (token) {
+        axios
+          .get(`/api/getUnreadMessageCount?api_token=${token}`)
+          .then((resp) => {
+            this.$store.dispatch("fetchUnreadCount", resp.data);
+          })
+          .catch((err) => {
+            console.error("Unable to load unread messages!");
+          });
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["unread"]),
+  },
+  created() {
+    this.getUnreadMessageCount();
   },
 };
 </script>

@@ -71,101 +71,105 @@
                 </div>
               </div>
             </div>
-            <base-table
+            <div
               v-if="resultQuery && resultQuery.length > 0"
-              class="table align-items-center table-flush"
-              :thead-classes="'thead-light'"
-              tbody-classes="list"
-              :data="resultQuery"
+              class="table-responsive"
             >
-              <template slot="columns">
-                <th>
-                  <input
-                    v-model="selectAll"
-                    type="checkbox"
-                    class="custom-control-alternative"
-                  />
-                </th>
-                <th>#</th>
-                <th></th>
-                <th>Name</th>
-                <th>Enroll.No</th>
-                <th>DOB</th>
-                <th>Batch</th>
-                <th>Status</th>
-                <th></th>
-              </template>
+              <base-table
+                class="table align-items-center table-flush"
+                :thead-classes="'thead-light'"
+                tbody-classes="list"
+                :data="resultQuery"
+              >
+                <template slot="columns">
+                  <th>
+                    <input
+                      v-model="selectAll"
+                      type="checkbox"
+                      class="custom-control-alternative"
+                    />
+                  </th>
+                  <th>#</th>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Enroll.No</th>
+                  <th>DOB</th>
+                  <th>Batch</th>
+                  <th>Status</th>
+                  <th></th>
+                </template>
 
-              <template slot-scope="{ row }">
-                <td>
-                  <input
-                    v-model="selectedStudents"
-                    :value="row.id"
-                    :id="row.id"
-                    type="checkbox"
-                    class="custom-control-alternative"
-                  />
-                </td>
-                <td>{{ row.id }}</td>
-                <td>
-                  <img
-                    :src="row.profile"
-                    width="50"
-                    height="50"
-                    :alt="row.name"
-                  />
-                </td>
-                <td class="budget">
-                  <inertia-link
-                    :href="$route('students.show', { id: row.id })"
-                    >{{ row.name }}</inertia-link
-                  >
-                </td>
-                <td>
-                  {{ row.enroll_no }}
-                </td>
-                <td>
-                  {{ row.dob_formatted }}
-                </td>
-
-                <td>
-                  {{ row.batch_name }}
-                </td>
-
-                <td>
-                  <badge v-if="row.active == 1" type="success">Active</badge>
-                  <badge v-else type="danger">Suspended</badge>
-                </td>
-
-                <td class="text-right">
-                  <base-dropdown class="dropdown" position="right">
-                    <a
-                      slot="title"
-                      class="btn btn-sm btn-icon-only text-light"
-                      role="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
+                <template slot-scope="{ row, index }">
+                  <td>
+                    <input
+                      v-model="selectedStudents"
+                      :value="row.id"
+                      :id="row.id"
+                      type="checkbox"
+                      class="custom-control-alternative"
+                    />
+                  </td>
+                  <td>{{ index + 1 }}</td>
+                  <td>
+                    <img
+                      :src="row.profile"
+                      width="50"
+                      height="50"
+                      :alt="row.name"
+                    />
+                  </td>
+                  <td class="budget">
+                    <inertia-link
+                      :href="$route('students.show', { id: row.id })"
+                      >{{ row.name }}</inertia-link
                     >
-                      <i class="ni ni-bold-down"></i>
-                    </a>
+                  </td>
+                  <td>
+                    {{ row.enroll_no }}
+                  </td>
+                  <td>
+                    {{ row.dob_formatted }}
+                  </td>
 
-                    <template>
-                      <inertia-link
-                        :href="$route('students.edit', { id: row.id })"
-                        class="dropdown-item"
-                        >Edit</inertia-link
+                  <td>
+                    {{ row.batch_name }}
+                  </td>
+
+                  <td>
+                    <badge v-if="row.active == 1" type="success">Active</badge>
+                    <badge v-else type="danger">Suspended</badge>
+                  </td>
+
+                  <td class="text-right">
+                    <base-dropdown class="dropdown" position="right">
+                      <a
+                        slot="title"
+                        class="btn btn-sm btn-icon-only text-light"
+                        role="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
                       >
-                      <span
-                        @click="showDeleteModal(row.id)"
-                        class="dropdown-item"
-                        >Delete</span
-                      >
-                    </template>
-                  </base-dropdown>
-                </td>
-              </template>
-            </base-table>
+                        <i class="ni ni-bold-down"></i>
+                      </a>
+
+                      <template>
+                        <inertia-link
+                          :href="$route('students.edit', { id: row.id })"
+                          class="dropdown-item"
+                          >Edit</inertia-link
+                        >
+                        <span
+                          @click="showDeleteModal(row.id)"
+                          class="dropdown-item"
+                          >Delete</span
+                        >
+                      </template>
+                    </base-dropdown>
+                  </td>
+                </template>
+              </base-table>
+            </div>
             <div v-else-if="!selectedBatch" class="p-3">
               <p>Select a batch to see the students!</p>
             </div>

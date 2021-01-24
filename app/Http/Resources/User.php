@@ -16,6 +16,7 @@ class User extends JsonResource
     public function toArray($request)
     {
         return [
+            'api_token' => $this->api_token,
             'id' => $this->id,
             'name' => $this->name,
             'enroll_no' => $this->enroll_no,

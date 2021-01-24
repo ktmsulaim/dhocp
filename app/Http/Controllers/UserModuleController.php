@@ -103,7 +103,7 @@ class UserModuleController extends Controller
 
                 if ($item->required == 1) {
                     if ($user->hasItem($item, $itemGroup)) {
-                        $itemUser = ItemUser::where(['item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
+                        $itemUser = ItemUser::where(['user_id' => $user->id, 'item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
                         $itemUser->value = $data;
                         $itemUser->save();
                     } else {
@@ -144,9 +144,9 @@ class UserModuleController extends Controller
 
                 if ($user->hasItem($item, $itemGroup)) {
                     if ($itemGroup) {
-                        $itemUser = ItemUser::where(['item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
+                        $itemUser = ItemUser::where(['user_id' => $user->id, 'item_group_id' => $itemGroup->id, 'item_id' => $item->id])->first();
                     } else {
-                        $itemUser = ItemUser::where(['item_id' => $item->id])->first();
+                        $itemUser = ItemUser::where(['user_id' => $user->id, 'item_id' => $item->id])->first();
                     }
 
                     $itemUser->value = $data;
@@ -154,7 +154,7 @@ class UserModuleController extends Controller
                 } else {
                     $itemGroup->itemUsers()->create([
                         'item_id' => $item->id,
-                        'user_id' => Auth::id(),
+                        'user_id' => $user->id,
                         'value' => $data,
                     ]);
                 }

@@ -41,6 +41,27 @@ import DashboardLayout from "../../../layout/users/DashboardLayout";
 export default {
   layout: DashboardLayout,
   props: ["announcement"],
+  methods: {
+    getUnreadMessageCount() {
+      const token = this.$page.props.auth_user.data.api_token;
+
+      if (token) {
+        axios
+          .get(`/api/getUnreadMessageCount?api_token=${token}`)
+          .then((resp) => {
+            this.$store.dispatch("fetchUnreadCount", resp.data);
+          })
+          .catch((err) => {
+            console.error("Unable to load unread messages!");
+          });
+      }
+    },
+  },
+  created() {
+    this.$store.dispatch("assignTitle", "View message");
+
+    this.getUnreadMessageCount();
+  },
 };
 </script>
 

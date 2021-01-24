@@ -38,9 +38,11 @@
                                     @foreach ($itemGroup->orderedItemUsers() as $itemUser)
                                         <td>{{ $itemUser->getValue() }}</td>
                                     @endforeach
+                                @else
+                                    <td colspan="{{ count($module3->items) }}"></td>
                                 @endif
                             @else
-                                @foreach ($module3->orderedItemUsers() as $itemUser)
+                                @foreach ($module3->orderedItemUsers($student->id) as $itemUser)
                                     <td>{{ $itemUser->getValue() }}</td>
                                 @endforeach
                             @endif

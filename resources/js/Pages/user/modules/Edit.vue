@@ -68,7 +68,8 @@
             </div>
             <div class="card-footer">
               <base-button
-                :disabled="!itemValues || !form.data"
+                :loading="loading"
+                :disabled="loading || !itemValues || !form.data"
                 @click="submit"
                 type="primary"
                 >Submit</base-button
@@ -155,6 +156,7 @@ export default {
         id: null,
         loading: false,
       },
+      loading: false,
     };
   },
   computed: {
@@ -213,8 +215,12 @@ export default {
       }
 
       if (this.form.data) {
+        this.loading = true;
+
         this.$inertia.post(this.$route("user.modules.updateItems"), this.form, {
-          onSuccess: (page) => {},
+          onFinish: () => {
+            this.loading = false;
+          },
         });
       }
     },

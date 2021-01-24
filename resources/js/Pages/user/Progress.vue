@@ -47,7 +47,7 @@
                         <verification-remarks
                           role="user"
                           :verification="item.obj"
-                          :studentID="$page.props.user.id"
+                          :studentID="$page.props.auth_user.data.id"
                         ></verification-remarks>
                       </template>
                     </light-timeline>

@@ -95,4 +95,9 @@ class AppController extends Controller
         $user->image = $new;
         $user->save();
     }
+
+    public function unreadCount()
+    {
+        return auth()->user()->announcements()->wherePivotNull('read_at')->count();
+    }
 }

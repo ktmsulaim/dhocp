@@ -43,7 +43,13 @@
               class="card-footer"
               v-if="module.items && module.items.length > 0"
             >
-              <base-button @click="submit" type="primary">Submit</base-button>
+              <base-button
+                :disabled="loading"
+                :loading="loading"
+                @click="submit"
+                type="primary"
+                >Submit</base-button
+              >
             </div>
           </div>
         </div>
@@ -70,6 +76,7 @@ export default {
         module_id: this.module.id,
         data: {},
       },
+      loading: false,
     };
   },
   computed: {
@@ -97,8 +104,11 @@ export default {
       if (this.getItemValue) {
         this.form.data = this.getItemValue;
       }
+      this.loading = true;
       this.$inertia.post(this.$route("user.modules.createItems"), this.form, {
-        onSuccess: (page) => {},
+        onFinish: () => {
+          this.loading = false;
+        },
       });
     },
   },

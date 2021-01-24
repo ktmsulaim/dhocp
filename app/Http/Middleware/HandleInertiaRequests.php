@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,8 +42,8 @@ class HandleInertiaRequests extends Middleware
             'appName' => config('app.name'),
 
             // Lazily
-            'user' => fn () => $request->user()
-                ? $request->user()->only('id', 'name', 'enroll_no')
+            'auth_user' => fn () => $request->user()
+                ? new User($request->user())
                 : null,
             'admin' => fn () => $request->user('admin')
                 ? $request->user('admin')->only('api_token', 'id', 'name', 'email')

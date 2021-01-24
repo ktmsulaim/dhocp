@@ -142,7 +142,7 @@
                       </div>
                       <div v-if="item.pivot.value" class="mt-2">
                         <item-status role="user" :item="item">
-                          <template slot="docViewer">
+                          <template v-if="item.type == 'file'" slot="docViewer">
                             <file-viewer
                               :type="
                                 isImage(item.pivot.value_info) ? 'image' : 'doc'

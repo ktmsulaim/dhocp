@@ -47,9 +47,9 @@ class Module extends Model
         return $this->hasManyThrough(ItemUser::class, Item::class);
     }
 
-    public function orderedItemUsers()
+    public function orderedItemUsers($user_id)
     {
-        return $this->itemUsers()->orderBy('order')->get();
+        return $this->itemUsers()->where('user_id', $user_id)->orderBy('order')->get();
     }
 
     public function hasInvalid($user_id)
