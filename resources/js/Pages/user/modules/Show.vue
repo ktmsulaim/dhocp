@@ -14,11 +14,13 @@
                   <h3>{{ module.name }}</h3>
                 </div>
                 <div class="col text-right">
-                  <base-button v-if="module.repeatable == 1" @click="addRecord"
+                  <base-button
+                    v-if="module.repeatable == 1 && module.status == 1"
+                    @click="addRecord"
                     >Add record</base-button
                   >
                   <base-button
-                    v-else-if="module.office_use == 0"
+                    v-else-if="module.office_use == 0 && module.status == 1"
                     @click="$inertia.get(`/modules/${module.id}/editRecord/`)"
                     >Edit record</base-button
                   >
@@ -141,16 +143,7 @@
                         <span v-else class="text-danger">No data</span>
                       </div>
                       <div v-if="item.pivot.value" class="mt-2">
-                        <item-status role="user" :item="item">
-                          <template v-if="item.type == 'file'" slot="docViewer">
-                            <file-viewer
-                              :type="
-                                isImage(item.pivot.value_info) ? 'image' : 'doc'
-                              "
-                              :item="item"
-                            />
-                          </template>
-                        </item-status>
+                        <item-status role="user" :item="item"></item-status>
                       </div>
                     </div>
                   </div>

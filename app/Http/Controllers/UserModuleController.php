@@ -17,7 +17,7 @@ class UserModuleController extends Controller
 {
     public function index()
     {
-        $modules = Module::active()->get();
+        $modules = Module::all();
 
         return Inertia::render('user/modules/Index', [
             'modules' => $modules,
@@ -43,7 +43,7 @@ class UserModuleController extends Controller
 
         return Inertia::render('user/modules/Show', [
             'module' => $module->load('items'),
-            'itemGroups' => optional($module->itemGroups())->with('itemUsers')->get(),
+            'itemGroups' => optional($module->itemGroups())->where('user_id', $user->id)->with('itemUsers')->get(),
             'items' => $user->getItemsByModule($module->id),
         ]);
     }
@@ -51,7 +51,7 @@ class UserModuleController extends Controller
     public function addRecord(Module $module)
     {
 
-        if ($module->office_use == 1 || !$module->isRepeatable()) {
+        if ($module->status == 0 || $module->office_use == 1 || !$module->isRepeatable()) {
             return Redirect::route('user.modules.index');
         }
 
@@ -62,8 +62,8 @@ class UserModuleController extends Controller
 
     public function editRecord(Module $module, $itemGroup = null)
     {
-        if ($module->office_use == 1) {
-            return Redirect::route('user.modules.index');
+        if ($module->office_use == 1 || $module->status == 0) {
+            return Redirect::route('user.modules.show', $module->id);
         }
 
         $user = Auth::user();
