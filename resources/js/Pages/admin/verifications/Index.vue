@@ -21,6 +21,12 @@
                 </div>
                 <div class="col text-right">
                   <base-button
+                    @click="$inertia.get($route('verifications.export'))"
+                    type="info"
+                    icon="ni ni-curved-next"
+                    >Export</base-button
+                  >
+                  <base-button
                     @click="modals.form = true"
                     type="primary"
                     icon="ni ni-fat-add"

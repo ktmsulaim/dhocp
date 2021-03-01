@@ -67,14 +67,19 @@ Route::prefix('admin')->group(function () {
         Route::resource('batches', BatchController::class, ['except' => ['destroy']]);
         Route::post('/batches/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
 
+        Route::get('/verifications/export', [VerificationsController::class, 'export'])->name('verifications.export');
+        Route::post('/verifications/export', [VerificationsController::class, 'exportData'])->name('verifications.export.post');
+
         Route::resource('verifications', VerificationsController::class, ['except' => ['destroy']]);
         Route::post('/verifications/updateOrder', [VerificationsController::class, 'updateOrder'])->name('verifications.updateOrder');
         Route::post('/verifications/{verification}', [VerificationsController::class, 'destroy'])->name('verifications.destroy');
         Route::post('/verifications/{verification}/approve', [VerificationsController::class, 'approve'])->name('verifications.approve');
         Route::post('/verifications/{verification}/disapprove', [VerificationsController::class, 'disapprove'])->name('verifications.disapprove');
+
         Route::post('/students/{id}/verifications/{verification}/approve', [VerificationsController::class, 'studentApprove'])->name('student.verifications.approve');
         Route::post('/students/{id}/verifications/{verification}/disapprove', [VerificationsController::class, 'studentDisapprove'])->name('student.verifications.disapprove');
         Route::post('/students/{id}/verifications/{verification}/updateRemarks', [VerificationsController::class, 'updateRemarks'])->name('student.verifications.updateRemarks');
+
 
         Route::get('/announcements/{announcement}/readBy', [AnnouncementController::class, 'readBy'])->name('announcements.readBy');
         Route::post('/announcements/{announcement}/updateStatus', [AnnouncementController::class, 'updateStatus'])->name('announcements.updateStatus');

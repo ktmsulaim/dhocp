@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserVerificationsExport;
 use App\Http\Resources\UserVerification as ResourcesUserVerification;
 use App\Http\Resources\Verification as ResourcesVerification;
 use App\Models\User;
@@ -10,6 +11,7 @@ use App\Models\Verification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VerificationsController extends Controller
 {
@@ -226,5 +228,41 @@ class VerificationsController extends Controller
         $userVerification = UserVerification::where(['user_id' => $id, 'verification_id' => $verification->id])->first();
         $userVerification->remarks = $remarks;
         $userVerification->save();
+    }
+
+    public function export()
+    {
+        return Inertia::render('admin/verifications/Export', [
+            'verifications' => Verification::all(),
+        ]);
+    }
+
+    public function exportData(Request $request)
+    {
+       $verificationIds = $request->verifications;
+       $verifications = null;
+
+       if($verificationIds) {
+           $ids = explode(',', $verificationIds[0]);
+
+           if(is_array($ids) && count($ids) > 0) {
+               $verifications = Verification::whereIn('id', $ids)->get();
+           } 
+       }
+
+       $students = User::active()->get();
+
+       // check all students have verification
+       if($students && count($students) > 0) {
+           foreach($students as $student) {
+               $student->checkHasAllVerifications();
+           }
+       }
+
+       if($verifications && $students) {
+        return Excel::download(new UserVerificationsExport($students, $verifications), 'Verification Report.xlsx', null, [\Maatwebsite\Excel\Excel::XLSX]);
+       } else {
+           return back();
+       }
     }
 }

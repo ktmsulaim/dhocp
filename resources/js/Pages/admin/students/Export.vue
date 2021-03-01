@@ -75,8 +75,7 @@
                     :loading="loading"
                     :disabled="loading"
                     @click="submitForm"
-                    >Submit</base-button
-                  >
+                    >Submit</base-button>
                 </div>
               </form>
             </div>

@@ -304,4 +304,17 @@ class User extends Authenticatable
 
         return false;
     }
+
+    public function checkHasAllVerifications()
+    {
+        $verifications = Verification::enabled()->get();
+
+        if($verifications && count($verifications) > 0) {
+            foreach($verifications as $verification) {
+                if(!$this->verifications()->where('verifications.id', $verification->id)->exists()) {
+                    $this->verifications()->attach($verification->id);
+                }
+            }
+        }
+    }
 }
