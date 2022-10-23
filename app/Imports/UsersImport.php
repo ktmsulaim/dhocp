@@ -22,8 +22,22 @@ class UsersImport implements ToModel
      */
     public function model(array $row)
     {
-        $dob = Carbon::createFromFormat('d/m/Y', $row[2]);
-        $dob_password = $dob->format('dmY');
+        try {
+            for ($i=0; $i < 4; $i++) { 
+                if(!$row[$i]) return;
+            }
+        } catch (\Throwable $th) {
+            return;
+        }
+
+        try {
+            $dob = Carbon::createFromFormat('d/m/Y', $row[2]);
+            $dob_password = $dob->format('dmY');
+        } catch (\Throwable $th) {
+            $dob = Carbon::now()->format('dmY');
+            $dob_password = $dob;
+        }
+
         return new User([
             'api_token' => $this->apiToken(),
             'name' => $row[0],
