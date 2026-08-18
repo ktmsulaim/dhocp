@@ -22,13 +22,34 @@ class StudentsImportController extends Controller
 
     public function import(Request $request)
     {
-        if (!$request->has('batch_id')) {
-            return Redirect::back();
+        $request->validate([
+            'batch_id' => 'required',
+            'file' => 'required|file',
+            'duplicate_mode' => 'required|in:skip,update',
+        ]);
+
+        $import = new UsersImport(
+            $request->get('batch_id'),
+            $request->get('duplicate_mode')
+        );
+
+        try {
+            Excel::import($import, $request->file('file'));
+        } catch (\Throwable $th) {
+            return Redirect::back()->with('import_result', [
+                'status' => 'error',
+                'message' => 'Import could not finish. Please check the file and try again.',
+            ]);
         }
 
-        $batch_id = $request->get('batch_id');
-        Excel::import(new UsersImport($batch_id), request()->file('file'));
-
-        return Redirect::back();
+        return Redirect::back()->with('import_result', [
+            'status' => 'success',
+            'message' => sprintf(
+                'Import complete. Created: %d, updated: %d, skipped: %d.',
+                $import->created,
+                $import->updated,
+                $import->skipped
+            ),
+        ]);
     }
 }

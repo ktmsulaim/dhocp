@@ -4,53 +4,93 @@ namespace App\Imports;
 
 use App\Models\User;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
 
-class UsersImport implements ToModel
+class UsersImport implements OnEachRow
 {
     protected $batch_id;
+    protected $duplicateMode;
 
-    public function __construct($batch_id)
+    public $created = 0;
+    public $updated = 0;
+    public $skipped = 0;
+
+    public function __construct($batch_id, $duplicateMode = 'skip')
     {
         $this->batch_id = $batch_id;
+        $this->duplicateMode = $duplicateMode === 'update' ? 'update' : 'skip';
     }
-    /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function model(array $row)
+
+    public function onRow(Row $row)
     {
         try {
-            for ($i=0; $i < 4; $i++) { 
-                if(!$row[$i]) return;
-            }
+            $this->importRow($row->toArray());
         } catch (\Throwable $th) {
+            $this->skipped++;
+        }
+    }
+
+    private function importRow(array $row)
+    {
+        if (!$this->isValidRow($row)) {
             return;
         }
 
-        try {
-            $dob = Carbon::createFromFormat('d/m/Y', $row[2]);
-            $dob_password = $dob->format('dmY');
-        } catch (\Throwable $th) {
-            $dob = Carbon::now()->format('dmY');
-            $dob_password = $dob;
+        $enrollNo = (string) intval($row[1]);
+        $dobPassword = $this->parseDobPassword($row[2]);
+        $existing = User::where('enroll_no', $enrollNo)->first();
+
+        if ($existing) {
+            if ($this->duplicateMode === 'skip') {
+                $this->skipped++;
+                return;
+            }
+
+            $existing->update($this->studentAttributes($row, $dobPassword));
+            $this->updated++;
+            return;
         }
 
-        return new User([
-            'api_token' => $this->apiToken(),
-            'name' => $row[0],
-            'batch_id' => $this->batch_id,
-            'enroll_no' => $row[1],
-            'dob_password' => $dob_password,
-            'dob' => $dob_password,
-            'active' => $row[3],
-        ]);
+        User::create(array_merge(
+            $this->studentAttributes($row, $dobPassword),
+            [
+                'api_token' => Str::random(32),
+                'enroll_no' => $enrollNo,
+            ]
+        ));
+        $this->created++;
     }
 
-    private function apiToken()
+    private function isValidRow(array $row)
     {
-        return Str::random(32);
+        for ($i = 0; $i < 4; $i++) {
+            if (!array_key_exists($i, $row) || $row[$i] === null || $row[$i] === '') {
+                return false;
+            }
+        }
+
+        return is_numeric($row[1]);
+    }
+
+    private function parseDobPassword($value)
+    {
+        try {
+            return Carbon::createFromFormat('d/m/Y', $value)->format('dmY');
+        } catch (\Throwable $th) {
+            return Carbon::now()->format('dmY');
+        }
+    }
+
+    private function studentAttributes(array $row, $dobPassword)
+    {
+        return [
+            'name' => $row[0],
+            'batch_id' => $this->batch_id,
+            'dob_password' => $dobPassword,
+            'dob' => $dobPassword,
+            'active' => $row[3],
+        ];
     }
 }

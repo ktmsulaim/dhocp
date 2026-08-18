@@ -93,6 +93,20 @@
                     </select>
                   </div>
                   <div class="form-group">
+                    <label class="form-control-label">Existing students</label>
+                    <select
+                      v-model="form.duplicate_mode"
+                      class="form-control form-control-alternative"
+                    >
+                      <option value="skip">
+                        Skip existing (keep current records)
+                      </option>
+                      <option value="update">
+                        Update existing (overwrite name, batch, DOB, status)
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <b-form-file
                       v-model="form.file"
                       :state="Boolean(form.file)"
@@ -130,6 +144,7 @@ export default {
       form: this.$inertia.form({
         batch_id: null,
         file: null,
+        duplicate_mode: "skip",
       }),
       notification: {
         status: false,
@@ -150,11 +165,16 @@ export default {
     form: {
       handler(value) {
         if (value.recentlySuccessful) {
+          const result =
+            this.$page.props.flash && this.$page.props.flash.import_result;
+          const isError = result && result.status === "error";
+
           this.notification = {
             status: true,
-            type: "success",
-            head: "Success",
-            message: "The request has been processed!",
+            type: isError ? "danger" : "success",
+            head: isError ? "Error" : "Success",
+            message:
+              (result && result.message) || "The request has been processed!",
           };
         } else {
           this.notification.status = false;
