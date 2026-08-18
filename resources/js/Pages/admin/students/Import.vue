@@ -91,20 +91,49 @@
                         {{ batch.name }}
                       </option>
                     </select>
+                    <div v-if="form.errors.batch_id" class="mt-2 text-danger">
+                      <p class="small mb-0">{{ form.errors.batch_id }}</p>
+                    </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-control-label">Existing students</label>
-                    <select
-                      v-model="form.duplicate_mode"
-                      class="form-control form-control-alternative"
+                    <label class="form-control-label">
+                      Existing students
+                    </label>
+                    <p class="small text-muted mb-3">
+                      Enrollment numbers must be unique. If this file includes
+                      students who are already in the system, choose what to do
+                      with those rows so the import can finish. Students who
+                      are not in the system yet are always added.
+                    </p>
+                    <div class="mb-3">
+                      <base-radio name="skip" v-model="form.duplicate_mode">
+                        Skip existing students
+                      </base-radio>
+                      <p class="small text-muted ml-4 mb-0">
+                        Keep their current name, batch, date of birth, and
+                        status. Choose this when you are adding new students
+                        and do not want to change anyone already imported.
+                      </p>
+                    </div>
+                    <div>
+                      <base-radio name="update" v-model="form.duplicate_mode">
+                        Update existing students
+                      </base-radio>
+                      <p class="small text-muted ml-4 mb-0">
+                        Overwrite name, batch, date of birth, and active
+                        status from the file. Choose this when you are
+                        correcting details or moving students to this batch.
+                        Documents already submitted are not affected.
+                      </p>
+                    </div>
+                    <div
+                      v-if="form.errors.duplicate_mode"
+                      class="mt-2 text-danger"
                     >
-                      <option value="skip">
-                        Skip existing (keep current records)
-                      </option>
-                      <option value="update">
-                        Update existing (overwrite name, batch, DOB, status)
-                      </option>
-                    </select>
+                      <p class="small mb-0">
+                        {{ form.errors.duplicate_mode }}
+                      </p>
+                    </div>
                   </div>
                   <div class="form-group">
                     <b-form-file
@@ -113,6 +142,9 @@
                       placeholder="Choose a file or drop it here..."
                       drop-placeholder="Drop file here..."
                     ></b-form-file>
+                    <div v-if="form.errors.file" class="mt-2 text-danger">
+                      <p class="small mb-0">{{ form.errors.file }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -157,14 +189,30 @@ export default {
   methods: {
     importStudents() {
       if (this.form.batch_id && this.form.file) {
-        this.form.post(this.$route("import.students"));
+        this.form.post(this.$route("import.students"), {
+          forceFormData: true,
+        });
       }
+    },
+    errorMessages(errors) {
+      return Object.keys(errors || {})
+        .map((key) => errors[key])
+        .filter(Boolean);
     },
   },
   watch: {
     form: {
       handler(value) {
-        if (value.recentlySuccessful) {
+        const errorMessages = this.errorMessages(value.errors);
+
+        if (errorMessages.length) {
+          this.notification = {
+            status: true,
+            type: "danger",
+            head: "Error",
+            message: errorMessages.join(" "),
+          };
+        } else if (value.recentlySuccessful) {
           const result =
             this.$page.props.flash && this.$page.props.flash.import_result;
           const isError = result && result.status === "error";
