@@ -2,6 +2,7 @@
   <component
     :is="tag"
     :type="tag === 'button' ? nativeType : ''"
+    :disabled="disabled || loading"
     @click="handleClick"
     class="btn"
     :class="classes"
@@ -113,6 +114,11 @@ export default {
       default: false,
       description: "Whether button is of block type",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+      description: "Whether button is disabled",
+    },
     loading: {
       type: Boolean,
       default: false,
@@ -150,6 +156,11 @@ export default {
   },
   methods: {
     handleClick(evt) {
+      if (this.loading || this.disabled) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        return;
+      }
       this.$emit("click", evt);
     },
   },

@@ -35,7 +35,16 @@ class StudentExportController extends Controller
         }
 
         if ($request->has('modules')) {
-            $moduleIds = explode(',', $request->modules[0]);
+            $rawModules = $request->modules;
+            if (is_array($rawModules)) {
+                if (count($rawModules) === 1 && str_contains((string) $rawModules[0], ',')) {
+                    $moduleIds = explode(',', $rawModules[0]);
+                } else {
+                    $moduleIds = $rawModules;
+                }
+            } else {
+                $moduleIds = explode(',', (string) $rawModules);
+            }
 
             if ($moduleIds && count($moduleIds) > 0) {
                 $modules = Module::whereIn('id', $moduleIds)->with('items')->get();

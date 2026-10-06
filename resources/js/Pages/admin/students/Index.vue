@@ -36,6 +36,12 @@
                       type="info"
                       >Export data</base-button
                     >
+                    <base-button
+                      @click="$inertia.get($route('export.documents.index'))"
+                      type="success"
+                      icon="ni ni-archive-2"
+                      >Export documents</base-button
+                    >
                     <base-dropdown v-if="batches && batches.length > 0">
                       <base-button
                         slot="title"

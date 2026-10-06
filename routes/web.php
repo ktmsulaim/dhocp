@@ -11,6 +11,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PrintFormController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentDocumentExportController;
 use App\Http\Controllers\StudentExportController;
 use App\Http\Controllers\StudentsImportController;
 use App\Http\Controllers\UserModuleController;
@@ -119,6 +120,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/export/students', [StudentExportController::class, 'index'])->name('export.students.index');
         Route::post('/export/students', [StudentExportController::class, 'export'])->name('export.students');
+        Route::get('/export/documents', [StudentDocumentExportController::class, 'index'])->name('export.documents.index');
+        Route::post('/export/documents/summary', [StudentDocumentExportController::class, 'summary'])->name('export.documents.summary');
+        Route::post('/export/documents', [StudentDocumentExportController::class, 'export'])->name('export.documents');
 
         Route::get('/import/students', [StudentsImportController::class, 'index'])->name('import.students.index');
         Route::post('/import/students', [StudentsImportController::class, 'import'])->name('import.students');

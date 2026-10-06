@@ -49,6 +49,23 @@ class User extends Authenticatable
         $this->attributes['dob_password'] = bcrypt($value);
     }
 
+    public function getDobFormattedAttribute()
+    {
+        if (empty($this->dob)) {
+            return '';
+        }
+
+        try {
+            return \Carbon\Carbon::createFromFormat('dmY', $this->dob)->format('d/m/Y');
+        } catch (\Throwable $th) {
+            try {
+                return \Carbon\Carbon::parse($this->dob)->format('d/m/Y');
+            } catch (\Throwable $th2) {
+                return $this->dob;
+            }
+        }
+    }
+
     public function scopeActive($query)
     {
         return $query->where('active', 1);
