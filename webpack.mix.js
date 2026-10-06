@@ -1,3 +1,8 @@
+const crypto = require('crypto');
+const origCreateHash = crypto.createHash;
+crypto.createHash = (algorithm, options) =>
+    origCreateHash(algorithm === 'md4' ? 'sha256' : algorithm, options);
+
 const mix = require('laravel-mix');
 
 /*
@@ -14,3 +19,7 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
+
+mix.override((config) => {
+    config.output.hashFunction = 'sha256';
+});
